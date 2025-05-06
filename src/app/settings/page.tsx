@@ -14,6 +14,8 @@ export default function SettingsPage() {
         birthDate: '',
         expectedLifespan: 80
     });
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState('');
 
     // 計算用戶年齡
     const calculateAge = (birthDate: string) => {
@@ -53,12 +55,16 @@ export default function SettingsPage() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        setIsLoading(true);
+        setError('');
         try {
             await updateUserProfile(formData);
             alert('設定已更新！');
         } catch (error) {
             console.error('更新設定時發生錯誤：', error);
-            alert('更新設定時發生錯誤，請稍後再試。');
+            setError('更新設定時發生錯誤，請稍後再試。');
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -84,6 +90,12 @@ export default function SettingsPage() {
                 <main className="flex-1 overflow-y-auto p-6">
                     <div className="max-w-xl mx-auto">
                         <h1 className="text-2xl font-semibold mb-6">個人設定</h1>
+
+                        {error && (
+                            <div className="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded-md">
+                                {error}
+                            </div>
+                        )}
 
                         <form onSubmit={handleSubmit} className="space-y-6">
                             {/* 用戶名稱設定 */}
@@ -141,9 +153,11 @@ export default function SettingsPage() {
                             {/* 提交按鈕 */}
                             <button
                                 type="submit"
-                                className="w-full max-w-md bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
+                                disabled={isLoading}
+                                className={`w-full max-w-md bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors ${isLoading ? 'opacity-50 cursor-not-allowed' : ''
+                                    }`}
                             >
-                                儲存設定
+                                {isLoading ? '儲存中...' : '儲存設定'}
                             </button>
                         </form>
                     </div>
