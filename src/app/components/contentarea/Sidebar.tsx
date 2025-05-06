@@ -55,7 +55,7 @@ export default function Sidebar() {
                 {!isCollapsed && (
                     <div className="ml-2">
                         <p className="text-sm font-medium text-gray-900 truncate">{user?.displayName || user?.email}</p>
-                        <p className="text-xs text-gray-500">'s WholeNow Board</p>
+                        <p className="text-xs text-gray-500">&apos;s WholeNow Board</p>
                     </div>
                 )}
             </div>
