@@ -1,7 +1,21 @@
+'use client';
+
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function Home() {
+  const router = useRouter();
+  const { user } = useAuth();
+
+  useEffect(() => {
+    if (user) {
+      router.push('/contentarea');
+    }
+  }, [user, router]);
+
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900">
       {/* 導航欄 */}
