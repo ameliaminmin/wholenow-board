@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { useAuth } from '@/contexts/AuthContext';
 
 export default function Register() {
+    const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
@@ -19,7 +20,7 @@ export default function Register() {
         try {
             setError('');
             setLoading(true);
-            await signUp(email, password);
+            await signUp(email, password, username);
             router.push('/');
         } catch (error) {
             setError('註冊失敗，請稍後再試');
@@ -44,6 +45,21 @@ export default function Register() {
                     )}
                     <div className="rounded-md shadow-sm -space-y-px">
                         <div>
+                            <label htmlFor="username" className="sr-only">
+                                用戶名稱
+                            </label>
+                            <input
+                                id="username"
+                                name="username"
+                                type="text"
+                                required
+                                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-700 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white rounded-t-md focus:outline-none focus:ring-gray-500 focus:border-gray-500 focus:z-10 sm:text-sm dark:bg-gray-800"
+                                placeholder="用戶名稱"
+                                value={username}
+                                onChange={(e) => setUsername(e.target.value)}
+                            />
+                        </div>
+                        <div>
                             <label htmlFor="email-address" className="sr-only">
                                 電子郵件
                             </label>
@@ -53,7 +69,7 @@ export default function Register() {
                                 type="email"
                                 autoComplete="email"
                                 required
-                                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-700 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white rounded-t-md focus:outline-none focus:ring-gray-500 focus:border-gray-500 focus:z-10 sm:text-sm dark:bg-gray-800"
+                                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-700 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white focus:outline-none focus:ring-gray-500 focus:border-gray-500 focus:z-10 sm:text-sm dark:bg-gray-800"
                                 placeholder="電子郵件"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}

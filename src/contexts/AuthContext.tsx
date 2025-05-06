@@ -6,7 +6,8 @@ import {
     signInWithEmailAndPassword,
     createUserWithEmailAndPassword,
     signOut,
-    onAuthStateChanged
+    onAuthStateChanged,
+    updateProfile
 } from 'firebase/auth';
 import { auth } from '@/lib/firebase/config';
 
@@ -14,7 +15,7 @@ interface AuthContextType {
     user: User | null;
     loading: boolean;
     signIn: (email: string, password: string) => Promise<void>;
-    signUp: (email: string, password: string) => Promise<void>;
+    signUp: (email: string, password: string, username: string) => Promise<void>;
     logout: () => Promise<void>;
 }
 
@@ -45,9 +46,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
     };
 
-    const signUp = async (email: string, password: string) => {
+    const signUp = async (email: string, password: string, username: string) => {
         try {
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+            await updateProfile(userCredential.user, {
+                displayName: username
+            });
             setUser(userCredential.user);
         } catch (error) {
             console.error('註冊錯誤:', error);
