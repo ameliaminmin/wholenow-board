@@ -22,7 +22,8 @@ export default function Register() {
             setLoading(true);
             await signUp(email, password, username);
             router.push('/');
-        } catch (error) {
+        } catch (err) {
+            console.error('註冊錯誤:', err);
             setError('註冊失敗，請稍後再試');
         } finally {
             setLoading(false);

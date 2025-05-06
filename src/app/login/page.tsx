@@ -20,8 +20,8 @@ export default function Login() {
             setLoading(true);
             await signIn(email, password);
             router.push('/contentarea');
-        } catch (error) {
-            console.error('登入錯誤:', error);
+        } catch (err) {
+            console.error('登入錯誤:', err);
             setError('登入失敗，請檢查您的電子郵件和密碼');
         } finally {
             setLoading(false);

@@ -9,7 +9,6 @@ import {
     ChevronRightIcon
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
-import Image from 'next/image';
 import { useAuth } from '@/contexts/AuthContext';
 
 // 導航項目類型定義
