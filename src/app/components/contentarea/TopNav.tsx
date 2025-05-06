@@ -10,7 +10,7 @@ export default function TopNav() {
                 <div className="flex h-10 items-center justify-between">
                     {/* 左側頁面標題 */}
                     <div className="flex items-center">
-                        <h1 className="text-sm font-normal text-gray-900">當前頁面</h1>
+                        <h1 className="text-sm font-normal text-gray-900"></h1>
                     </div>
 
                     {/* 右側工具列 */}
