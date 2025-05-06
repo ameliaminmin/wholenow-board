@@ -19,7 +19,7 @@ export default function Login() {
             setError('');
             setLoading(true);
             await signIn(email, password);
-            router.push('/');
+            router.push('/contentarea');
         } catch (error) {
             setError('登入失敗，請檢查您的電子郵件和密碼');
         } finally {
