@@ -30,31 +30,30 @@ export default function Sidebar() {
     const [isCollapsed, setIsCollapsed] = useState(false);
 
     return (
-        <div className={`bg-white h-screen transition-all duration-300 ease-in-out ${isCollapsed ? 'w-20' : 'w-64'
-            } border-r border-gray-200`}>
+        <div className={`bg-white h-screen transition-all duration-300 ease-in-out ${isCollapsed ? 'w-16' : 'w-48'} border-r border-gray-200`}>
             {/* 收合按鈕 */}
             <button
                 onClick={() => setIsCollapsed(!isCollapsed)}
-                className="w-full p-4 flex items-center justify-end hover:bg-gray-50"
+                className="w-full p-3 flex items-center justify-end hover:bg-gray-50"
             >
                 {isCollapsed ? (
-                    <ChevronRightIcon className="h-5 w-5 text-gray-500" />
+                    <ChevronRightIcon className="h-4 w-4 text-gray-500" />
                 ) : (
-                    <ChevronLeftIcon className="h-5 w-5 text-gray-500" />
+                    <ChevronLeftIcon className="h-4 w-4 text-gray-500" />
                 )}
             </button>
 
             {/* 導航項目 */}
-            <nav className="mt-4">
+            <nav className="mt-2">
                 {navigation.map((item) => (
                     <Link
                         key={item.name}
                         href={item.href}
-                        className="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-50 hover:text-gray-900"
+                        className="flex items-center px-3 py-2 text-gray-700 hover:bg-gray-50 hover:text-gray-900"
                     >
-                        <item.icon className="h-6 w-6" />
+                        <item.icon className="h-5 w-5" />
                         {!isCollapsed && (
-                            <span className="ml-3">{item.name}</span>
+                            <span className="ml-2 text-sm">{item.name}</span>
                         )}
                     </Link>
                 ))}
