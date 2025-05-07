@@ -17,35 +17,20 @@ const getCurrentWeekDates = (year: number, month: number) => {
 
     monday.setDate(today.getDate() - (currentDay === 0 ? 6 : currentDay - 1));
 
-    return days.map((_, index) => {
+    return days.map((day, index) => {
         const date = new Date(monday);
         date.setDate(monday.getDate() + index);
-        return date.getDate();
+        const isToday = date.getDate() === today.getDate() &&
+            date.getMonth() === today.getMonth() &&
+            date.getFullYear() === today.getFullYear();
+        return {
+            date: date.getDate(),
+            weekDay: days[index],
+            isToday,
+            month: date.getMonth(),
+            year: date.getFullYear()
+        };
     });
-};
-
-// 獲取某月的所有日期和對應星期
-const getMonthDates = (year: number, month: number) => {
-    const firstDay = new Date(year, month, 1);
-    const lastDay = new Date(year, month + 1, 0);
-    const totalDays = lastDay.getDate();
-
-    const today = new Date();
-    const isCurrentMonth = today.getMonth() === month && today.getFullYear() === year;
-    const todayDate = today.getDate();  // 改名為 todayDate 避免衝突
-
-    const dates = [];
-    for (let date = 1; date <= totalDays; date++) {
-        const currentDate = new Date(year, month, date);
-        const weekDay = currentDate.getDay();
-        const adjustedWeekDay = weekDay === 0 ? 6 : weekDay - 1;
-        dates.push({
-            date,
-            weekDay: days[adjustedWeekDay],
-            isToday: isCurrentMonth && date === todayDate  // 使用 todayDate
-        });
-    }
-    return dates;
 };
 
 export default function LearnProgressPage() {
@@ -119,8 +104,8 @@ export default function LearnProgressPage() {
             <div className="flex-1 flex flex-col overflow-hidden">
                 <TopNav />
                 <div className="flex-1 overflow-y-auto">
-                    <div className="bg-white min-h-screen p-10 font-sans">
-                        <div className="flex items-center gap-4 mb-8">
+                    <div className="bg-white min-h-screen p-10 pt-2 font-sans">
+                        <div className="flex items-center gap-4 mb-4 sticky top-0 bg-white z-10 py-4">
                             <div className="relative">
                                 <span
                                     onClick={() => setShowYearDropdown(!showYearDropdown)}
@@ -187,33 +172,29 @@ export default function LearnProgressPage() {
                                 <tr>
                                     <th className="border border-gray-200 p-2 font-semibold bg-gray-50 text-left w-12 text-sm">星期</th>
                                     <th className="border border-gray-200 p-2 font-semibold bg-gray-50 text-left w-12 text-sm">日期</th>
-                                    <th className="border border-gray-200 p-2 font-semibold bg-gray-50 text-left text-sm">目標</th>
-                                    <th className="border border-gray-200 p-2 font-semibold bg-gray-50 text-left text-sm">成果</th>
+                                    <th className="border border-gray-200 p-2 font-semibold bg-gray-50 text-left w-32 text-sm">目標</th>
+                                    <th className="border border-gray-200 p-2 font-semibold bg-gray-50 text-left w-32 text-sm">成果</th>
                                     <th className="border border-gray-200 p-2 font-semibold bg-gray-50 text-left w-16 text-sm">時數</th>
                                     <th className="border border-gray-200 p-2 font-semibold bg-gray-50 text-left text-sm">筆記</th>
-                                    <th className="border border-gray-200 p-2 font-semibold bg-gray-50 text-left text-sm">關鍵字</th>
                                     <th className="border border-gray-200 p-2 font-semibold bg-gray-50 text-left text-sm">疑問</th>
-                                    <th className="border border-gray-200 p-2 font-semibold bg-gray-50 text-left text-sm">點子</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {getMonthDates(selectedYear, selectedMonth).map(({ date, weekDay, isToday }) => (
+                                {getCurrentWeekDates(selectedYear, selectedMonth).map(({ date, weekDay, isToday, month, year }) => (
                                     <tr
                                         key={date}
                                         ref={isToday ? todayRowRef : null}
                                         className={`h-12 ${isToday ? 'bg-blue-50' : ''}`}
                                     >
-                                        <td className="border border-gray-200 p-2 w-12">{weekDay}</td>
-                                        <td className={`border border-gray-200 p-2 w-12 ${isToday ? 'font-bold text-blue-600' : ''}`}>
-                                            {date}
+                                        <td className="border border-gray-200 p-2 w-12 text-sm">{weekDay}</td>
+                                        <td className={`border border-gray-200 p-2 w-12 text-sm ${isToday ? 'font-bold text-blue-600' : ''}`}>
+                                            {month !== selectedMonth ? `${month + 1}/${date}` : date}
                                         </td>
-                                        <td className="border border-gray-200 p-2"></td>
-                                        <td className="border border-gray-200 p-2"></td>
-                                        <td className="border border-gray-200 p-2 w-16"></td>
-                                        <td className="border border-gray-200 p-2"></td>
-                                        <td className="border border-gray-200 p-2"></td>
-                                        <td className="border border-gray-200 p-2"></td>
-                                        <td className="border border-gray-200 p-2"></td>
+                                        <td className="border border-gray-200 p-2 w-32 text-sm"></td>
+                                        <td className="border border-gray-200 p-2 w-32 text-sm"></td>
+                                        <td className="border border-gray-200 p-2 w-16 text-sm"></td>
+                                        <td className="border border-gray-200 p-2 text-sm"></td>
+                                        <td className="border border-gray-200 p-2 text-sm"></td>
                                     </tr>
                                 ))}
                             </tbody>
