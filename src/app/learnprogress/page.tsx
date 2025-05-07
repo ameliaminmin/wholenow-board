@@ -10,19 +10,20 @@ import { useRouter } from 'next/navigation';
 const days = ['一', '二', '三', '四', '五', '六', '日'];
 
 // 獲取本週的日期
-const getCurrentWeekDates = (year: number, month: number) => {
-    const today = new Date(year, month);
-    const currentDay = today.getDay();
-    const monday = new Date(today);
+const getCurrentWeekDates = (year: number, month: number, weekNumber: number) => {
+    const firstDayOfMonth = new Date(year, month, 1);
+    const firstDayWeekday = firstDayOfMonth.getDay() || 7; // 將週日(0)轉換為7
+    const daysToFirstMonday = (firstDayWeekday - 1);
 
-    monday.setDate(today.getDate() - (currentDay === 0 ? 6 : currentDay - 1));
+    // 計算選中週的第一天
+    const firstDayOfWeek = new Date(year, month, 1 - daysToFirstMonday + (weekNumber - 1) * 7);
 
     return days.map((day, index) => {
-        const date = new Date(monday);
-        date.setDate(monday.getDate() + index);
-        const isToday = date.getDate() === today.getDate() &&
-            date.getMonth() === today.getMonth() &&
-            date.getFullYear() === today.getFullYear();
+        const date = new Date(firstDayOfWeek);
+        date.setDate(firstDayOfWeek.getDate() + index);
+        const isToday = date.getDate() === new Date().getDate() &&
+            date.getMonth() === new Date().getMonth() &&
+            date.getFullYear() === new Date().getFullYear();
         return {
             date: date.getDate(),
             weekDay: days[index],
@@ -33,13 +34,31 @@ const getCurrentWeekDates = (year: number, month: number) => {
     });
 };
 
+// 獲取指定月份的週數
+const getWeeksInMonth = (year: number, month: number) => {
+    const firstDay = new Date(year, month, 1);
+    const lastDay = new Date(year, month + 1, 0);
+    const firstWeek = Math.ceil((firstDay.getDate() + (firstDay.getDay() === 0 ? 6 : firstDay.getDay() - 1)) / 7);
+    const totalWeeks = Math.ceil((lastDay.getDate() + (firstDay.getDay() === 0 ? 6 : firstDay.getDay() - 1)) / 7);
+    return Array.from({ length: totalWeeks }, (_, i) => i + 1);
+};
+
+// 獲取當前日期是該月第幾週
+const getCurrentWeek = (year: number, month: number, date: number) => {
+    const targetDate = new Date(year, month, date);
+    const firstDay = new Date(year, month, 1);
+    return Math.ceil((date + (firstDay.getDay() === 0 ? 6 : firstDay.getDay() - 1)) / 7);
+};
+
 export default function LearnProgressPage() {
     const router = useRouter();
     const { user, userProfile } = useAuth();
     const [selectedYear, setSelectedYear] = React.useState(new Date().getFullYear());
     const [selectedMonth, setSelectedMonth] = React.useState(new Date().getMonth());
+    const [selectedWeek, setSelectedWeek] = React.useState(getCurrentWeek(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()));
     const [showYearDropdown, setShowYearDropdown] = React.useState(false);
     const [showMonthDropdown, setShowMonthDropdown] = React.useState(false);
+    const [showWeekDropdown, setShowWeekDropdown] = React.useState(false);
     const yearDropdownRef = React.useRef<HTMLDivElement>(null);
     const todayRowRef = React.useRef<HTMLTableRowElement>(null);
 
@@ -166,6 +185,25 @@ export default function LearnProgressPage() {
                                 )}
                             </div>
                             <div className="text-2xl font-bold">月</div>
+                            <div className="ml-8 relative flex items-center gap-3">
+                                {Array.from({ length: 5 }, (_, i) => i + 1).map(week => (
+                                    <div
+                                        key={week}
+                                        onClick={() => {
+                                            setSelectedWeek(week);
+                                            // 更新表格顯示的週數
+                                            const firstDayOfMonth = new Date(selectedYear, selectedMonth, 1);
+                                            const daysToAdd = (week - 1) * 7;
+                                            firstDayOfMonth.setDate(firstDayOfMonth.getDate() + daysToAdd);
+                                            setSelectedWeek(week);
+                                        }}
+                                        className={`w-3 h-3 rounded-full border border-gray-300 cursor-pointer transition-all duration-200 ${week === selectedWeek
+                                                ? 'bg-blue-500 border-blue-500'
+                                                : 'hover:border-blue-400'
+                                            }`}
+                                    />
+                                ))}
+                            </div>
                         </div>
                         <table className="w-full border-collapse bg-white">
                             <thead>
@@ -180,7 +218,7 @@ export default function LearnProgressPage() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {getCurrentWeekDates(selectedYear, selectedMonth).map(({ date, weekDay, isToday, month, year }) => (
+                                {getCurrentWeekDates(selectedYear, selectedMonth, selectedWeek).map(({ date, weekDay, isToday, month, year }) => (
                                     <tr
                                         key={date}
                                         ref={isToday ? todayRowRef : null}
