@@ -275,15 +275,20 @@ export default function LearnProgressPage() {
                                             <td className={`border border-gray-200 p-2 w-12 text-sm ${isToday ? 'font-bold text-blue-600' : ''}`}>
                                                 {month !== selectedMonth ? `${month + 1}/${date}` : date}
                                             </td>
-                                            <td className="border border-gray-200 p-2 w-[10%] text-sm">
+                                            <td className="border border-gray-200 p-2 w-[10%] text-sm align-top">
                                                 <textarea
-                                                    className="w-full bg-transparent border-none focus:outline-none resize-none overflow-hidden"
+                                                    className="w-full bg-transparent border-none focus:outline-none resize-none"
                                                     rows={1}
                                                     value={progressData[dateKey]?.goal || ''}
                                                     onChange={(e) => saveProgressData(dateKey, 'goal', e.target.value)}
+                                                    style={{
+                                                        minHeight: '2.5rem',
+                                                        overflow: 'hidden',
+                                                        height: 'auto'
+                                                    }}
                                                     onInput={(e) => {
                                                         e.currentTarget.style.height = 'auto';
-                                                        e.currentTarget.style.height = e.currentTarget.scrollHeight + 'px';
+                                                        e.currentTarget.style.height = `${e.currentTarget.scrollHeight}px`;
                                                     }}
                                                 />
                                             </td>
