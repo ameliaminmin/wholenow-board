@@ -36,18 +36,8 @@ const getCurrentWeekDates = (year: number, month: number, weekNumber: number) =>
     });
 };
 
-// 獲取指定月份的週數
-const getWeeksInMonth = (year: number, month: number) => {
-    const firstDay = new Date(year, month, 1);
-    const lastDay = new Date(year, month + 1, 0);
-    const firstWeek = Math.ceil((firstDay.getDate() + (firstDay.getDay() === 0 ? 6 : firstDay.getDay() - 1)) / 7);
-    const totalWeeks = Math.ceil((lastDay.getDate() + (firstDay.getDay() === 0 ? 6 : firstDay.getDay() - 1)) / 7);
-    return Array.from({ length: totalWeeks }, (_, i) => i + 1);
-};
-
 // 獲取當前日期是該月第幾週
 const getCurrentWeek = (year: number, month: number, date: number) => {
-    const targetDate = new Date(year, month, date);
     const firstDay = new Date(year, month, 1);
     return Math.ceil((date + (firstDay.getDay() === 0 ? 6 : firstDay.getDay() - 1)) / 7);
 };
@@ -60,9 +50,15 @@ export default function LearnProgressPage() {
     const [selectedWeek, setSelectedWeek] = React.useState(getCurrentWeek(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()));
     const [showYearDropdown, setShowYearDropdown] = React.useState(false);
     const [showMonthDropdown, setShowMonthDropdown] = React.useState(false);
-    const [showWeekDropdown, setShowWeekDropdown] = React.useState(false);
     const yearDropdownRef = React.useRef<HTMLDivElement>(null);
     const todayRowRef = React.useRef<HTMLTableRowElement>(null);
+    const [progressData, setProgressData] = React.useState<Record<string, {
+        goal: string;
+        achievement: string;
+        hours: string;
+        notes: string;
+        question: string;
+    }>>({});
 
     // 生成年份選項（從出生年到期望壽命）
     const yearOptions = React.useMemo(() => {
@@ -97,10 +93,6 @@ export default function LearnProgressPage() {
         }
     }, [user, router]);
 
-    if (!user) {
-        return null;
-    }
-
     // 當年份下拉選單打開時，滾動到當前年份的位置
     React.useEffect(() => {
         if (showYearDropdown && yearDropdownRef.current) {
@@ -119,14 +111,6 @@ export default function LearnProgressPage() {
         }
     }, [selectedMonth, selectedYear]);
 
-    const [progressData, setProgressData] = React.useState<Record<string, {
-        goal: string;
-        achievement: string;
-        hours: string;
-        notes: string;
-        question: string;
-    }>>({});
-
     // 加载用户的学习进度数据
     React.useEffect(() => {
         if (user) {
@@ -141,26 +125,9 @@ export default function LearnProgressPage() {
         }
     }, [user, selectedYear, selectedMonth, selectedWeek]);
 
-    // 保存数据到Firebase
-    const saveProgressData = async (dateKey: string, field: string, value: string) => {
-        if (!user) return;
-
-        const newData = {
-            ...progressData,
-            [dateKey]: {
-                ...(progressData[dateKey] || {}),
-                [field]: value
-            }
-        };
-
-        setProgressData(newData);
-
-        try {
-            await setDoc(doc(db, 'users', user.uid, 'learnprogress', `${selectedYear}-${selectedMonth}-${selectedWeek}`), newData);
-        } catch (error) {
-            console.error('保存数据时出错:', error);
-        }
-    };
+    if (!user) {
+        return null;
+    }
 
     return (
         <div className="flex h-screen bg-white">
@@ -280,7 +247,17 @@ export default function LearnProgressPage() {
                                                     className="w-full bg-transparent border-none focus:outline-none resize-none"
                                                     rows={1}
                                                     value={progressData[dateKey]?.goal || ''}
-                                                    onChange={(e) => saveProgressData(dateKey, 'goal', e.target.value)}
+                                                    onChange={(e) => {
+                                                        const newData = {
+                                                            ...progressData,
+                                                            [dateKey]: {
+                                                                ...(progressData[dateKey] || {}),
+                                                                goal: e.target.value
+                                                            }
+                                                        };
+                                                        setProgressData(newData);
+                                                        setDoc(doc(db, 'users', user.uid, 'learnprogress', `${selectedYear}-${selectedMonth}-${selectedWeek}`), newData);
+                                                    }}
                                                     style={{
                                                         minHeight: '2.5rem',
                                                         overflow: 'hidden',
@@ -297,7 +274,17 @@ export default function LearnProgressPage() {
                                                     className="w-full bg-transparent border-none focus:outline-none resize-none overflow-hidden"
                                                     rows={1}
                                                     value={progressData[dateKey]?.achievement || ''}
-                                                    onChange={(e) => saveProgressData(dateKey, 'achievement', e.target.value)}
+                                                    onChange={(e) => {
+                                                        const newData = {
+                                                            ...progressData,
+                                                            [dateKey]: {
+                                                                ...(progressData[dateKey] || {}),
+                                                                achievement: e.target.value
+                                                            }
+                                                        };
+                                                        setProgressData(newData);
+                                                        setDoc(doc(db, 'users', user.uid, 'learnprogress', `${selectedYear}-${selectedMonth}-${selectedWeek}`), newData);
+                                                    }}
                                                     onInput={(e) => {
                                                         e.currentTarget.style.height = 'auto';
                                                         e.currentTarget.style.height = e.currentTarget.scrollHeight + 'px';
@@ -309,7 +296,17 @@ export default function LearnProgressPage() {
                                                     className="w-full bg-transparent border-none focus:outline-none resize-none overflow-hidden"
                                                     rows={1}
                                                     value={progressData[dateKey]?.hours || ''}
-                                                    onChange={(e) => saveProgressData(dateKey, 'hours', e.target.value)}
+                                                    onChange={(e) => {
+                                                        const newData = {
+                                                            ...progressData,
+                                                            [dateKey]: {
+                                                                ...(progressData[dateKey] || {}),
+                                                                hours: e.target.value
+                                                            }
+                                                        };
+                                                        setProgressData(newData);
+                                                        setDoc(doc(db, 'users', user.uid, 'learnprogress', `${selectedYear}-${selectedMonth}-${selectedWeek}`), newData);
+                                                    }}
                                                     onInput={(e) => {
                                                         e.currentTarget.style.height = 'auto';
                                                         e.currentTarget.style.height = e.currentTarget.scrollHeight + 'px';
@@ -321,7 +318,17 @@ export default function LearnProgressPage() {
                                                     className="w-full bg-transparent border-none focus:outline-none resize-none overflow-hidden"
                                                     rows={1}
                                                     value={progressData[dateKey]?.notes || ''}
-                                                    onChange={(e) => saveProgressData(dateKey, 'notes', e.target.value)}
+                                                    onChange={(e) => {
+                                                        const newData = {
+                                                            ...progressData,
+                                                            [dateKey]: {
+                                                                ...(progressData[dateKey] || {}),
+                                                                notes: e.target.value
+                                                            }
+                                                        };
+                                                        setProgressData(newData);
+                                                        setDoc(doc(db, 'users', user.uid, 'learnprogress', `${selectedYear}-${selectedMonth}-${selectedWeek}`), newData);
+                                                    }}
                                                     onInput={(e) => {
                                                         e.currentTarget.style.height = 'auto';
                                                         e.currentTarget.style.height = e.currentTarget.scrollHeight + 'px';
@@ -333,7 +340,17 @@ export default function LearnProgressPage() {
                                                     className="w-full bg-transparent border-none focus:outline-none resize-none overflow-hidden"
                                                     rows={1}
                                                     value={progressData[dateKey]?.question || ''}
-                                                    onChange={(e) => saveProgressData(dateKey, 'question', e.target.value)}
+                                                    onChange={(e) => {
+                                                        const newData = {
+                                                            ...progressData,
+                                                            [dateKey]: {
+                                                                ...(progressData[dateKey] || {}),
+                                                                question: e.target.value
+                                                            }
+                                                        };
+                                                        setProgressData(newData);
+                                                        setDoc(doc(db, 'users', user.uid, 'learnprogress', `${selectedYear}-${selectedMonth}-${selectedWeek}`), newData);
+                                                    }}
                                                     onInput={(e) => {
                                                         e.currentTarget.style.height = 'auto';
                                                         e.currentTarget.style.height = e.currentTarget.scrollHeight + 'px';
