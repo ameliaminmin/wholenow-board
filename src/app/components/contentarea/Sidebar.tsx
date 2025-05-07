@@ -21,7 +21,7 @@ type NavItem = {
 // 導航項目列表
 const navigation: NavItem[] = [
     { name: '首頁', href: '/', icon: HomeIcon },
-    { name: '學習進度表', href: '/progress', icon: AcademicCapIcon },
+    { name: '學習進度表', href: '/learnprogress', icon: AcademicCapIcon },
     { name: '設定', href: '/settings', icon: Cog6ToothIcon },
 ];
 
