@@ -24,6 +24,30 @@ const getCurrentWeekDates = (year: number, month: number) => {
     });
 };
 
+// 獲取某月的所有日期和對應星期
+const getMonthDates = (year: number, month: number) => {
+    const firstDay = new Date(year, month, 1);
+    const lastDay = new Date(year, month + 1, 0);
+    const totalDays = lastDay.getDate();
+
+    const today = new Date();
+    const isCurrentMonth = today.getMonth() === month && today.getFullYear() === year;
+    const todayDate = today.getDate();  // 改名為 todayDate 避免衝突
+
+    const dates = [];
+    for (let date = 1; date <= totalDays; date++) {
+        const currentDate = new Date(year, month, date);
+        const weekDay = currentDate.getDay();
+        const adjustedWeekDay = weekDay === 0 ? 6 : weekDay - 1;
+        dates.push({
+            date,
+            weekDay: days[adjustedWeekDay],
+            isToday: isCurrentMonth && date === todayDate  // 使用 todayDate
+        });
+    }
+    return dates;
+};
+
 export default function LearnProgressPage() {
     const router = useRouter();
     const { user, userProfile } = useAuth();
@@ -32,6 +56,7 @@ export default function LearnProgressPage() {
     const [showYearDropdown, setShowYearDropdown] = React.useState(false);
     const [showMonthDropdown, setShowMonthDropdown] = React.useState(false);
     const yearDropdownRef = React.useRef<HTMLDivElement>(null);
+    const todayRowRef = React.useRef<HTMLTableRowElement>(null);
 
     // 生成年份選項（從出生年到期望壽命）
     const yearOptions = React.useMemo(() => {
@@ -80,6 +105,14 @@ export default function LearnProgressPage() {
         }
     }, [showYearDropdown]);
 
+    // 當表格渲染完成後，滾動到今天的位置
+    React.useEffect(() => {
+        const today = new Date();
+        if (selectedMonth === today.getMonth() && selectedYear === today.getFullYear() && todayRowRef.current) {
+            todayRowRef.current.scrollIntoView({ block: 'center', behavior: 'smooth' });
+        }
+    }, [selectedMonth, selectedYear]);
+
     return (
         <div className="flex h-screen bg-white">
             <Sidebar />
@@ -89,14 +122,14 @@ export default function LearnProgressPage() {
                     <div className="bg-white min-h-screen p-10 font-sans">
                         <div className="flex items-center gap-4 mb-8">
                             <div className="relative">
-                                <span 
+                                <span
                                     onClick={() => setShowYearDropdown(!showYearDropdown)}
                                     className="text-2xl font-bold cursor-pointer hover:text-blue-600"
                                 >
                                     {selectedYear}
                                 </span>
                                 {showYearDropdown && (
-                                    <div 
+                                    <div
                                         ref={yearDropdownRef}
                                         className="absolute top-full left-0 mt-1 bg-white border border-gray-200 rounded shadow-lg max-h-48 overflow-y-auto z-10"
                                     >
@@ -121,7 +154,7 @@ export default function LearnProgressPage() {
                             </div>
                             <div className="text-2xl font-bold">年</div>
                             <div className="relative">
-                                <span 
+                                <span
                                     onClick={() => setShowMonthDropdown(!showMonthDropdown)}
                                     className="text-2xl font-bold cursor-pointer hover:text-blue-600"
                                 >
@@ -164,10 +197,16 @@ export default function LearnProgressPage() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {days.map((day, idx) => (
-                                    <tr key={day} className="h-12">
-                                        <td className="border border-gray-200 p-2 w-12">{day}</td>
-                                        <td className="border border-gray-200 p-2 w-12">{getCurrentWeekDates(selectedYear, selectedMonth)[idx]}</td>
+                                {getMonthDates(selectedYear, selectedMonth).map(({ date, weekDay, isToday }) => (
+                                    <tr
+                                        key={date}
+                                        ref={isToday ? todayRowRef : null}
+                                        className={`h-12 ${isToday ? 'bg-blue-50' : ''}`}
+                                    >
+                                        <td className="border border-gray-200 p-2 w-12">{weekDay}</td>
+                                        <td className={`border border-gray-200 p-2 w-12 ${isToday ? 'font-bold text-blue-600' : ''}`}>
+                                            {date}
+                                        </td>
                                         <td className="border border-gray-200 p-2"></td>
                                         <td className="border border-gray-200 p-2"></td>
                                         <td className="border border-gray-200 p-2 w-16"></td>
