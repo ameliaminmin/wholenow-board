@@ -5,6 +5,8 @@ import TopNav from '../components/contentarea/TopNav';
 import Sidebar from '../components/contentarea/Sidebar';
 import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
+import { doc, setDoc, getDoc } from 'firebase/firestore';
+import { db } from '@/lib/firebase/config';
 
 // 週一到週日
 const days = ['一', '二', '三', '四', '五', '六', '日'];
@@ -117,6 +119,49 @@ export default function LearnProgressPage() {
         }
     }, [selectedMonth, selectedYear]);
 
+    const [progressData, setProgressData] = React.useState<Record<string, {
+        goal: string;
+        achievement: string;
+        hours: string;
+        notes: string;
+        question: string;
+    }>>({});
+
+    // 加载用户的学习进度数据
+    React.useEffect(() => {
+        if (user) {
+            const loadProgressData = async () => {
+                const docRef = doc(db, 'users', user.uid, 'learnprogress', `${selectedYear}-${selectedMonth}-${selectedWeek}`);
+                const docSnap = await getDoc(docRef);
+                if (docSnap.exists()) {
+                    setProgressData(docSnap.data());
+                }
+            };
+            loadProgressData();
+        }
+    }, [user, selectedYear, selectedMonth, selectedWeek]);
+
+    // 保存数据到Firebase
+    const saveProgressData = async (dateKey: string, field: string, value: string) => {
+        if (!user) return;
+
+        const newData = {
+            ...progressData,
+            [dateKey]: {
+                ...(progressData[dateKey] || {}),
+                [field]: value
+            }
+        };
+
+        setProgressData(newData);
+
+        try {
+            await setDoc(doc(db, 'users', user.uid, 'learnprogress', `${selectedYear}-${selectedMonth}-${selectedWeek}`), newData);
+        } catch (error) {
+            console.error('保存数据时出错:', error);
+        }
+    };
+
     return (
         <div className="flex h-screen bg-white">
             <Sidebar />
@@ -218,23 +263,81 @@ export default function LearnProgressPage() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {getCurrentWeekDates(selectedYear, selectedMonth, selectedWeek).map(({ date, weekDay, isToday, month, year }) => (
-                                    <tr
-                                        key={date}
-                                        ref={isToday ? todayRowRef : null}
-                                        className={`h-14 ${isToday ? 'bg-blue-50' : ''}`}
-                                    >
-                                        <td className="border border-gray-200 p-2 w-12 text-sm">{weekDay}</td>
-                                        <td className={`border border-gray-200 p-2 w-12 text-sm ${isToday ? 'font-bold text-blue-600' : ''}`}>
-                                            {month !== selectedMonth ? `${month + 1}/${date}` : date}
-                                        </td>
-                                        <td className="border border-gray-200 p-2 w-[10%] text-sm"></td>
-                                        <td className="border border-gray-200 p-2 w-[12%] text-sm"></td>
-                                        <td className="border border-gray-200 p-2 w-[8%] text-sm"></td>
-                                        <td className="border border-gray-200 p-2 flex-[2] text-sm"></td>
-                                        <td className="border border-gray-200 p-2 flex-[1.5] text-sm"></td>
-                                    </tr>
-                                ))}
+                                {getCurrentWeekDates(selectedYear, selectedMonth, selectedWeek).map(({ date, weekDay, isToday, month, year }) => {
+                                    const dateKey = `${year}-${month}-${date}`;
+                                    return (
+                                        <tr
+                                            key={date}
+                                            ref={isToday ? todayRowRef : null}
+                                            className={`h-14 ${isToday ? 'bg-blue-50' : ''}`}
+                                        >
+                                            <td className="border border-gray-200 p-2 w-12 text-sm">{weekDay}</td>
+                                            <td className={`border border-gray-200 p-2 w-12 text-sm ${isToday ? 'font-bold text-blue-600' : ''}`}>
+                                                {month !== selectedMonth ? `${month + 1}/${date}` : date}
+                                            </td>
+                                            <td className="border border-gray-200 p-2 w-[10%] text-sm">
+                                                <textarea
+                                                    className="w-full bg-transparent border-none focus:outline-none resize-none overflow-hidden"
+                                                    rows={1}
+                                                    value={progressData[dateKey]?.goal || ''}
+                                                    onChange={(e) => saveProgressData(dateKey, 'goal', e.target.value)}
+                                                    onInput={(e) => {
+                                                        e.currentTarget.style.height = 'auto';
+                                                        e.currentTarget.style.height = e.currentTarget.scrollHeight + 'px';
+                                                    }}
+                                                />
+                                            </td>
+                                            <td className="border border-gray-200 p-2 w-[12%] text-sm">
+                                                <textarea
+                                                    className="w-full bg-transparent border-none focus:outline-none resize-none overflow-hidden"
+                                                    rows={1}
+                                                    value={progressData[dateKey]?.achievement || ''}
+                                                    onChange={(e) => saveProgressData(dateKey, 'achievement', e.target.value)}
+                                                    onInput={(e) => {
+                                                        e.currentTarget.style.height = 'auto';
+                                                        e.currentTarget.style.height = e.currentTarget.scrollHeight + 'px';
+                                                    }}
+                                                />
+                                            </td>
+                                            <td className="border border-gray-200 p-2 w-[8%] text-sm">
+                                                <textarea
+                                                    className="w-full bg-transparent border-none focus:outline-none resize-none overflow-hidden"
+                                                    rows={1}
+                                                    value={progressData[dateKey]?.hours || ''}
+                                                    onChange={(e) => saveProgressData(dateKey, 'hours', e.target.value)}
+                                                    onInput={(e) => {
+                                                        e.currentTarget.style.height = 'auto';
+                                                        e.currentTarget.style.height = e.currentTarget.scrollHeight + 'px';
+                                                    }}
+                                                />
+                                            </td>
+                                            <td className="border border-gray-200 p-2 flex-[2] text-sm">
+                                                <textarea
+                                                    className="w-full bg-transparent border-none focus:outline-none resize-none overflow-hidden"
+                                                    rows={1}
+                                                    value={progressData[dateKey]?.notes || ''}
+                                                    onChange={(e) => saveProgressData(dateKey, 'notes', e.target.value)}
+                                                    onInput={(e) => {
+                                                        e.currentTarget.style.height = 'auto';
+                                                        e.currentTarget.style.height = e.currentTarget.scrollHeight + 'px';
+                                                    }}
+                                                />
+                                            </td>
+                                            <td className="border border-gray-200 p-2 flex-[1.5] text-sm">
+                                                <textarea
+                                                    className="w-full bg-transparent border-none focus:outline-none resize-none overflow-hidden"
+                                                    rows={1}
+                                                    value={progressData[dateKey]?.question || ''}
+                                                    onChange={(e) => saveProgressData(dateKey, 'question', e.target.value)}
+                                                    onInput={(e) => {
+                                                        e.currentTarget.style.height = 'auto';
+                                                        e.currentTarget.style.height = e.currentTarget.scrollHeight + 'px';
+                                                    }}
+                                                />
+                                            </td>
+                                        </tr>
+                                    );
+                                })}
                             </tbody>
                         </table>
                     </div>
