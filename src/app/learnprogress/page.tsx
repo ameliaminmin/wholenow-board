@@ -198,8 +198,8 @@ export default function LearnProgressPage() {
                                             setSelectedWeek(week);
                                         }}
                                         className={`w-3 h-3 rounded-full border border-gray-300 cursor-pointer transition-all duration-200 ${week === selectedWeek
-                                                ? 'bg-blue-500 border-blue-500'
-                                                : 'hover:border-blue-400'
+                                            ? 'bg-blue-500 border-blue-500'
+                                            : 'hover:border-blue-400'
                                             }`}
                                     />
                                 ))}
@@ -210,11 +210,11 @@ export default function LearnProgressPage() {
                                 <tr>
                                     <th className="border border-gray-200 p-2 font-semibold bg-gray-50 text-left w-12 text-sm">星期</th>
                                     <th className="border border-gray-200 p-2 font-semibold bg-gray-50 text-left w-12 text-sm">日期</th>
-                                    <th className="border border-gray-200 p-2 font-semibold bg-gray-50 text-left w-32 text-sm">目標</th>
-                                    <th className="border border-gray-200 p-2 font-semibold bg-gray-50 text-left w-32 text-sm">成果</th>
-                                    <th className="border border-gray-200 p-2 font-semibold bg-gray-50 text-left w-16 text-sm">時數</th>
-                                    <th className="border border-gray-200 p-2 font-semibold bg-gray-50 text-left text-sm">筆記</th>
-                                    <th className="border border-gray-200 p-2 font-semibold bg-gray-50 text-left text-sm">疑問</th>
+                                    <th className="border border-gray-200 p-2 font-semibold bg-gray-50 text-left w-[10%] text-sm">目標</th>
+                                    <th className="border border-gray-200 p-2 font-semibold bg-gray-50 text-left w-[12%] text-sm">成果</th>
+                                    <th className="border border-gray-200 p-2 font-semibold bg-gray-50 text-left w-[8%] text-sm">時數</th>
+                                    <th className="border border-gray-200 p-2 font-semibold bg-gray-50 text-left flex-[2] text-sm">筆記</th>
+                                    <th className="border border-gray-200 p-2 font-semibold bg-gray-50 text-left flex-[1.5] text-sm">疑問</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -222,17 +222,17 @@ export default function LearnProgressPage() {
                                     <tr
                                         key={date}
                                         ref={isToday ? todayRowRef : null}
-                                        className={`h-12 ${isToday ? 'bg-blue-50' : ''}`}
+                                        className={`h-14 ${isToday ? 'bg-blue-50' : ''}`}
                                     >
                                         <td className="border border-gray-200 p-2 w-12 text-sm">{weekDay}</td>
                                         <td className={`border border-gray-200 p-2 w-12 text-sm ${isToday ? 'font-bold text-blue-600' : ''}`}>
                                             {month !== selectedMonth ? `${month + 1}/${date}` : date}
                                         </td>
-                                        <td className="border border-gray-200 p-2 w-32 text-sm"></td>
-                                        <td className="border border-gray-200 p-2 w-32 text-sm"></td>
-                                        <td className="border border-gray-200 p-2 w-16 text-sm"></td>
-                                        <td className="border border-gray-200 p-2 text-sm"></td>
-                                        <td className="border border-gray-200 p-2 text-sm"></td>
+                                        <td className="border border-gray-200 p-2 w-[10%] text-sm"></td>
+                                        <td className="border border-gray-200 p-2 w-[12%] text-sm"></td>
+                                        <td className="border border-gray-200 p-2 w-[8%] text-sm"></td>
+                                        <td className="border border-gray-200 p-2 flex-[2] text-sm"></td>
+                                        <td className="border border-gray-200 p-2 flex-[1.5] text-sm"></td>
                                     </tr>
                                 ))}
                             </tbody>
