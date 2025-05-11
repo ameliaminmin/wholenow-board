@@ -48,7 +48,7 @@ export default function Home() {
       <section className="relative min-h-[600px] flex items-center justify-center pt-32 pb-24 px-6 overflow-hidden">
         {/* 背景圖片 */}
         <Image
-          src="/images/wholenowboard05.jpg"
+          src="/images/wholenowboard05.JPG"
           alt="WholeNow Board 主視覺"
           fill
           style={{ objectFit: 'cover', objectPosition: 'center' }}
