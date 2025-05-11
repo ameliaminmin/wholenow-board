@@ -85,7 +85,7 @@ export default function Home() {
               href="/register"
               className="px-10 py-5 text-lg font-medium bg-white text-gray-900 rounded-full hover:bg-gray-100 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
             >
-              立即開始使用
+              開始使用
             </Link>
             <a
               href="#features"
@@ -95,7 +95,7 @@ export default function Home() {
                 document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' });
               }}
             >
-              探索更多功能
+              了解更多
             </a>
           </motion.div>
         </div>
@@ -111,7 +111,7 @@ export default function Home() {
             viewport={{ once: true }}
             className="text-xl text-gray-600 text-center leading-relaxed"
           >
-            一款結合 <span className="font-medium text-gray-900">視覺化時間軸</span> × <span className="font-medium text-gray-900">個人Wiki</span> × <span className="font-medium text-gray-900">夢想板</span> 的全新行事曆筆記系統，
+            這是一款結合 <span className="font-medium text-gray-900">視覺化時間軸</span> × <span className="font-medium text-gray-900">個人Wiki</span> × <span className="font-medium text-gray-900">夢想板</span> 的全方位行事曆筆記系統，
             <br />
             幫助你整理人生、釐清方向、紀錄成長。
           </motion.p>
@@ -174,19 +174,19 @@ export default function Home() {
       <section id="features" className="py-24 bg-gray-50">
         <div className="max-w-4xl mx-auto px-6">
           <h2 className="text-3xl font-medium text-gray-900 mb-16 text-center">
-            🌟 核心功能特色
+            🌟 核心功能
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {[
               {
                 icon: "🕰️",
                 title: "人生時間軸",
-                description: "多種時間軸類型，讓你從「人生的全貌」到「當下的重點」都能一眼掌握。支援依據專案與主題分類的專屬時間視圖，讓你的成長、計畫與內在變化，都在對的位置上被看見。透過「看得見的時間」，重建你與生活的關係，也重拾前進的節奏與意圖。"
+                description: "多種時間軸類型，讓你從「人生的全貌」到「當下的重點」都能一眼掌握。支援依據專案與主題分類的專屬時間視圖，讓你的成長、計畫與內在變化，都在對的位置上被看見。"
               },
               {
                 icon: "🧠",
                 title: "個人Wiki系統",
-                description: "建立屬於你自己的主題知識庫：成長背景、價值觀、人生信念、情緒模式、關係模式、夢想、與生命覺察......讓你成為自己人生的研究者。"
+                description: "建立屬於你自己的主題知識庫：成長背景、價值觀、人生信念、情緒模式、關係模式、夢想、與生命覺察......與AI一起探索，讓你成為自己人生的研究者，為未來做出最好的選擇。"
               },
               {
                 icon: "🌈",
