@@ -38,6 +38,7 @@ export default function Register() {
                         註冊新帳戶
                     </h2>
                 </div>
+
                 <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
                     {error && (
                         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
@@ -112,8 +113,13 @@ export default function Register() {
                             已有帳戶？立即登入
                         </Link>
                     </div>
+                    <div className="text-center">
+                        <Link href="/" className="text-sm font-medium text-gray-400 dark:text-gray-500 hover:text-gray-900 dark:hover:text-white">
+                            回到首頁
+                        </Link>
+                    </div>
                 </form>
             </div>
         </div>
     );
-} 
+}

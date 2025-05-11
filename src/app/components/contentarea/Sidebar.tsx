@@ -6,7 +6,8 @@ import {
     AcademicCapIcon,
     Cog6ToothIcon,
     ChevronLeftIcon,
-    ChevronRightIcon
+    ChevronRightIcon,
+    ArrowLeftOnRectangleIcon
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { useAuth } from '@/contexts/AuthContext';
@@ -27,13 +28,26 @@ const navigation: NavItem[] = [
 
 export default function Sidebar() {
     const [isCollapsed, setIsCollapsed] = useState(false);
-    const { user } = useAuth();
+    const [showDropdown, setShowDropdown] = useState(false);
+    const { user, logout } = useAuth();
+
+    const handleLogout = async () => {
+        try {
+            await logout();
+            window.location.href = '/'; // 登出後跳轉到首頁
+        } catch (error) {
+            console.error('登出時發生錯誤:', error);
+        }
+    };
 
     return (
         <div className={`bg-white h-screen transition-all duration-300 ease-in-out ${isCollapsed ? 'w-16' : 'w-48'} border-r border-gray-200`}>
             {/* 用戶信息區域 */}
-            <div className="flex items-center p-3">
-                <div className="relative w-8 h-8 rounded-full overflow-hidden bg-gray-100">
+            <div className="flex items-center p-3 relative">
+                <div
+                    className="relative w-8 h-8 rounded-full overflow-hidden bg-gray-100 cursor-pointer"
+                    onClick={() => setShowDropdown(!showDropdown)}
+                >
                     <svg
                         viewBox="0 0 24 24"
                         fill="none"
@@ -55,6 +69,19 @@ export default function Sidebar() {
                     <div className="ml-2">
                         <p className="text-sm font-medium text-gray-900 truncate">{user?.displayName || user?.email}</p>
                         <p className="text-xs text-gray-500">&apos;s WholeNow Board</p>
+                    </div>
+                )}
+
+                {/* 下拉選單 */}
+                {showDropdown && (
+                    <div className="absolute left-3 top-12 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                        <button
+                            onClick={handleLogout}
+                            className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
+                        >
+                            <ArrowLeftOnRectangleIcon className="h-4 w-4 mr-2" />
+                            登出
+                        </button>
                     </div>
                 )}
             </div>
