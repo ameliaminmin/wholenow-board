@@ -95,8 +95,13 @@ export default function Login() {
                             還沒有帳戶？立即註冊
                         </Link>
                     </div>
+                    <div className="text-center pt-4">
+                        <Link href="/" className="text-sm font-medium text-gray-400 dark:text-gray-500 hover:text-gray-900 dark:hover:text-white">
+                            回到首頁
+                        </Link>
+                    </div>
                 </form>
             </div>
         </div>
     );
-} 
+}
