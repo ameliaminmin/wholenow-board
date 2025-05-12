@@ -12,6 +12,24 @@ import {
 import Link from 'next/link';
 import { useAuth } from '@/contexts/AuthContext';
 
+// 自定義日曆圖標組件
+const CalendarIcon = (props: React.SVGProps<SVGSVGElement>) => (
+    <svg
+        className="w-5 h-5"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+        {...props}
+    >
+        <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={1.6}
+            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+        />
+    </svg>
+);
+
 // 導航項目類型定義
 type NavItem = {
     name: string;
@@ -22,6 +40,7 @@ type NavItem = {
 // 導航項目列表
 const navigation: NavItem[] = [
     { name: '首頁', href: '/', icon: HomeIcon },
+    { name: '人生年曆', href: '/life-calendar', icon: CalendarIcon },
     { name: '學習進度表', href: '/learnprogress', icon: AcademicCapIcon },
     { name: '設定', href: '/settings', icon: Cog6ToothIcon },
 ];
