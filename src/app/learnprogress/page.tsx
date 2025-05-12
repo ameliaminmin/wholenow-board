@@ -9,7 +9,6 @@ import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase/config';
 import dynamic from 'next/dynamic';
 import remarkGfm from 'remark-gfm';
-import type { Components } from 'react-markdown';
 
 // 定義進度數據的型別
 type ProgressField = 'goal' | 'achievement' | 'hours' | 'notes' | 'question';
