@@ -3,17 +3,11 @@
 import { useState, useEffect } from 'react';
 import { auth } from '@/lib/firebase/config';
 import { db } from '@/lib/firebase/config';
-import { doc, getDoc, setDoc, collection } from 'firebase/firestore';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
 import Sidebar from '@/app/components/contentarea/Sidebar';
 import TopNav from '@/app/components/contentarea/TopNav';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-
-// 定義格子內容的類型
-interface CellContent {
-    content: string;
-    year: number;
-}
 
 export default function LifeCalendar() {
     const [lifeExpectancy, setLifeExpectancy] = useState<number>(80);

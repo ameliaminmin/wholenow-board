@@ -59,7 +59,6 @@ const getCurrentWeek = (year: number, month: number, date: number) => {
 
 // 定義代碼組件的型別
 type CodeProps = {
-    node?: any;
     inline?: boolean;
     className?: string;
     children?: React.ReactNode;
@@ -136,7 +135,7 @@ const MarkdownCell = ({
                                 </blockquote>
                             ),
                             // 自定義代碼塊樣式
-                            code: ({ node, inline, className, children, ...props }: CodeProps) => {
+                            code: ({ inline, className, children, ...props }: CodeProps) => {
                                 const match = /language-(\w+)/.exec(className || '');
                                 return !inline ? (
                                     <pre className="bg-gray-100 p-2 rounded my-1 overflow-x-auto">
