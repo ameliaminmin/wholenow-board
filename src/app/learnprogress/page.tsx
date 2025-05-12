@@ -7,6 +7,21 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase/config';
+import dynamic from 'next/dynamic';
+import remarkGfm from 'remark-gfm';
+import type { Components } from 'react-markdown';
+
+// 定義進度數據的型別
+type ProgressField = 'goal' | 'achievement' | 'hours' | 'notes' | 'question';
+type ProgressData = Record<string, {
+    [K in ProgressField]: string;
+}>;
+
+// 動態導入 ReactMarkdown 以避免 SSR 問題
+const ReactMarkdown = dynamic(() => import('react-markdown'), {
+    ssr: false,
+    loading: () => <div>載入中...</div>
+});
 
 // 週一到週日
 const days = ['一', '二', '三', '四', '五', '六', '日'];
@@ -42,6 +57,113 @@ const getCurrentWeek = (year: number, month: number, date: number) => {
     return Math.ceil((date + (firstDay.getDay() === 0 ? 6 : firstDay.getDay() - 1)) / 7);
 };
 
+// 定義代碼組件的型別
+type CodeProps = {
+    node?: any;
+    inline?: boolean;
+    className?: string;
+    children?: React.ReactNode;
+};
+
+// Markdown 編輯器組件
+const MarkdownCell = ({
+    value,
+    onChange,
+    onBlur,
+    isEditing,
+    onToggleEdit
+}: {
+    value: string;
+    onChange: (value: string) => void;
+    onBlur: () => void;
+    isEditing: boolean;
+    onToggleEdit: () => void;
+}) => {
+    const textareaRef = React.useRef<HTMLTextAreaElement>(null);
+
+    React.useEffect(() => {
+        if (isEditing && textareaRef.current) {
+            textareaRef.current.focus();
+            // 設置初始高度
+            textareaRef.current.style.height = 'auto';
+            textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
+        }
+    }, [isEditing]);
+
+    if (isEditing) {
+        return (
+            <div className="relative h-full">
+                <textarea
+                    ref={textareaRef}
+                    className="w-full h-full bg-transparent border-none focus:outline-none resize-none overflow-hidden p-1 whitespace-pre-wrap absolute inset-0"
+                    value={value}
+                    onChange={(e) => onChange(e.target.value)}
+                    onBlur={onBlur}
+                    onInput={(e) => {
+                        const target = e.target as HTMLTextAreaElement;
+                        target.style.height = 'auto';
+                        target.style.height = `${target.scrollHeight}px`;
+                    }}
+                    style={{
+                        minHeight: '100%'
+                    }}
+                />
+            </div>
+        );
+    }
+
+    return (
+        <div
+            className="prose prose-sm max-w-none p-1 cursor-pointer hover:bg-gray-50 rounded h-full min-h-[2.5rem] relative"
+            onClick={onToggleEdit}
+        >
+            {value ? (
+                <div className="[&_p]:whitespace-pre-wrap [&_li]:whitespace-pre-wrap [&_pre]:whitespace-pre-wrap">
+                    <ReactMarkdown
+                        remarkPlugins={[remarkGfm]}
+                        components={{
+                            // 自定義標題樣式
+                            h1: ({ children }) => <h1 className="text-lg font-bold mt-2 mb-1">{children}</h1>,
+                            h2: ({ children }) => <h2 className="text-base font-bold mt-2 mb-1">{children}</h2>,
+                            h3: ({ children }) => <h3 className="text-sm font-bold mt-2 mb-1">{children}</h3>,
+                            // 自定義列表樣式
+                            ul: ({ children }) => <ul className="list-disc pl-4 my-1">{children}</ul>,
+                            ol: ({ children }) => <ol className="list-decimal pl-4 my-1">{children}</ol>,
+                            // 自定義引用樣式
+                            blockquote: ({ children }) => (
+                                <blockquote className="border-l-2 border-gray-300 pl-2 my-1 text-gray-600">
+                                    {children}
+                                </blockquote>
+                            ),
+                            // 自定義代碼塊樣式
+                            code: ({ node, inline, className, children, ...props }: CodeProps) => {
+                                const match = /language-(\w+)/.exec(className || '');
+                                return !inline ? (
+                                    <pre className="bg-gray-100 p-2 rounded my-1 overflow-x-auto">
+                                        <code className={match ? `language-${match[1]}` : ''} {...props}>
+                                            {children}
+                                        </code>
+                                    </pre>
+                                ) : (
+                                    <code className="bg-gray-100 px-1 rounded" {...props}>
+                                        {children}
+                                    </code>
+                                );
+                            },
+                        }}
+                    >
+                        {value}
+                    </ReactMarkdown>
+                </div>
+            ) : (
+                <div className="absolute inset-0 flex items-center p-1 text-gray-400 opacity-0 hover:opacity-100">
+
+                </div>
+            )}
+        </div>
+    );
+};
+
 export default function LearnProgressPage() {
     const router = useRouter();
     const { user, userProfile } = useAuth();
@@ -52,13 +174,11 @@ export default function LearnProgressPage() {
     const [showMonthDropdown, setShowMonthDropdown] = React.useState(false);
     const yearDropdownRef = React.useRef<HTMLDivElement>(null);
     const todayRowRef = React.useRef<HTMLTableRowElement>(null);
-    const [progressData, setProgressData] = React.useState<Record<string, {
-        goal: string;
-        achievement: string;
-        hours: string;
-        notes: string;
-        question: string;
-    }>>({});
+    const [progressData, setProgressData] = React.useState<ProgressData>({});
+    const [editingCell, setEditingCell] = React.useState<{
+        dateKey: string;
+        field: ProgressField;
+    } | null>(null);
 
     // 生成年份選項（從出生年到期望壽命）
     const yearOptions = React.useMemo(() => {
@@ -232,131 +352,44 @@ export default function LearnProgressPage() {
                             <tbody>
                                 {getCurrentWeekDates(selectedYear, selectedMonth, selectedWeek).map(({ date, weekDay, isToday, month, year }) => {
                                     const dateKey = `${year}-${month}-${date}`;
+                                    const fields: ProgressField[] = ['goal', 'achievement', 'hours', 'notes', 'question'];
                                     return (
                                         <tr
                                             key={date}
                                             ref={isToday ? todayRowRef : null}
-                                            className={`h-14 ${isToday ? 'bg-blue-50' : ''}`}
+                                            className={`${isToday ? 'bg-blue-50' : ''}`}
                                         >
                                             <td className="border border-gray-200 p-2 w-12 text-sm">{weekDay}</td>
                                             <td className={`border border-gray-200 p-2 w-12 text-sm ${isToday ? 'font-bold text-blue-600' : ''}`}>
                                                 {month !== selectedMonth ? `${month + 1}/${date}` : date}
                                             </td>
-                                            <td className="border border-gray-200 p-2 w-[10%] text-sm align-top">
-                                                <textarea
-                                                    className="w-full bg-transparent border-none focus:outline-none resize-none"
-                                                    rows={1}
-                                                    value={progressData[dateKey]?.goal || ''}
-                                                    onChange={(e) => {
-                                                        const newData = {
-                                                            ...progressData,
-                                                            [dateKey]: {
-                                                                ...(progressData[dateKey] || {}),
-                                                                goal: e.target.value
-                                                            }
-                                                        };
-                                                        setProgressData(newData);
-                                                        setDoc(doc(db, 'users', user.uid, 'learnprogress', `${selectedYear}-${selectedMonth}-${selectedWeek}`), newData);
-                                                    }}
-                                                    style={{
-                                                        minHeight: '2.5rem',
-                                                        overflow: 'hidden',
-                                                        height: 'auto'
-                                                    }}
-                                                    onInput={(e) => {
-                                                        e.currentTarget.style.height = 'auto';
-                                                        e.currentTarget.style.height = `${e.currentTarget.scrollHeight}px`;
-                                                    }}
-                                                />
-                                            </td>
-                                            <td className="border border-gray-200 p-2 w-[12%] text-sm">
-                                                <textarea
-                                                    className="w-full bg-transparent border-none focus:outline-none resize-none overflow-hidden"
-                                                    rows={1}
-                                                    value={progressData[dateKey]?.achievement || ''}
-                                                    onChange={(e) => {
-                                                        const newData = {
-                                                            ...progressData,
-                                                            [dateKey]: {
-                                                                ...(progressData[dateKey] || {}),
-                                                                achievement: e.target.value
-                                                            }
-                                                        };
-                                                        setProgressData(newData);
-                                                        setDoc(doc(db, 'users', user.uid, 'learnprogress', `${selectedYear}-${selectedMonth}-${selectedWeek}`), newData);
-                                                    }}
-                                                    onInput={(e) => {
-                                                        e.currentTarget.style.height = 'auto';
-                                                        e.currentTarget.style.height = e.currentTarget.scrollHeight + 'px';
-                                                    }}
-                                                />
-                                            </td>
-                                            <td className="border border-gray-200 p-2 w-[8%] text-sm">
-                                                <textarea
-                                                    className="w-full bg-transparent border-none focus:outline-none resize-none overflow-hidden"
-                                                    rows={1}
-                                                    value={progressData[dateKey]?.hours || ''}
-                                                    onChange={(e) => {
-                                                        const newData = {
-                                                            ...progressData,
-                                                            [dateKey]: {
-                                                                ...(progressData[dateKey] || {}),
-                                                                hours: e.target.value
-                                                            }
-                                                        };
-                                                        setProgressData(newData);
-                                                        setDoc(doc(db, 'users', user.uid, 'learnprogress', `${selectedYear}-${selectedMonth}-${selectedWeek}`), newData);
-                                                    }}
-                                                    onInput={(e) => {
-                                                        e.currentTarget.style.height = 'auto';
-                                                        e.currentTarget.style.height = e.currentTarget.scrollHeight + 'px';
-                                                    }}
-                                                />
-                                            </td>
-                                            <td className="border border-gray-200 p-2 flex-[2] text-sm">
-                                                <textarea
-                                                    className="w-full bg-transparent border-none focus:outline-none resize-none overflow-hidden"
-                                                    rows={1}
-                                                    value={progressData[dateKey]?.notes || ''}
-                                                    onChange={(e) => {
-                                                        const newData = {
-                                                            ...progressData,
-                                                            [dateKey]: {
-                                                                ...(progressData[dateKey] || {}),
-                                                                notes: e.target.value
-                                                            }
-                                                        };
-                                                        setProgressData(newData);
-                                                        setDoc(doc(db, 'users', user.uid, 'learnprogress', `${selectedYear}-${selectedMonth}-${selectedWeek}`), newData);
-                                                    }}
-                                                    onInput={(e) => {
-                                                        e.currentTarget.style.height = 'auto';
-                                                        e.currentTarget.style.height = e.currentTarget.scrollHeight + 'px';
-                                                    }}
-                                                />
-                                            </td>
-                                            <td className="border border-gray-200 p-2 flex-[1.5] text-sm">
-                                                <textarea
-                                                    className="w-full bg-transparent border-none focus:outline-none resize-none overflow-hidden"
-                                                    rows={1}
-                                                    value={progressData[dateKey]?.question || ''}
-                                                    onChange={(e) => {
-                                                        const newData = {
-                                                            ...progressData,
-                                                            [dateKey]: {
-                                                                ...(progressData[dateKey] || {}),
-                                                                question: e.target.value
-                                                            }
-                                                        };
-                                                        setProgressData(newData);
-                                                        setDoc(doc(db, 'users', user.uid, 'learnprogress', `${selectedYear}-${selectedMonth}-${selectedWeek}`), newData);
-                                                    }}
-                                                    onInput={(e) => {
-                                                        e.currentTarget.style.height = 'auto';
-                                                        e.currentTarget.style.height = e.currentTarget.scrollHeight + 'px';
-                                                    }}
-                                                />
-                                            </td>
+                                            {fields.map((field) => (
+                                                <td key={field} className="border border-gray-200 p-0 text-sm h-14">
+                                                    <MarkdownCell
+                                                        value={progressData[dateKey]?.[field] || ''}
+                                                        onChange={(newValue) => {
+                                                            const newData = {
+                                                                ...progressData,
+                                                                [dateKey]: {
+                                                                    ...(progressData[dateKey] || {}),
+                                                                    [field]: newValue
+                                                                }
+                                                            };
+                                                            setProgressData(newData);
+                                                            setDoc(doc(db, 'users', user.uid, 'learnprogress', `${selectedYear}-${selectedMonth}-${selectedWeek}`), newData);
+                                                        }}
+                                                        isEditing={editingCell?.dateKey === dateKey && editingCell?.field === field}
+                                                        onToggleEdit={() => {
+                                                            setEditingCell(editingCell?.dateKey === dateKey && editingCell?.field === field
+                                                                ? null
+                                                                : { dateKey, field });
+                                                        }}
+                                                        onBlur={() => {
+                                                            // 可以添加額外的保存邏輯
+                                                        }}
+                                                    />
+                                                </td>
+                                            ))}
                                         </tr>
                                     );
                                 })}
