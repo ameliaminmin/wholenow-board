@@ -16,8 +16,8 @@ export default function Calendar() {
                 <button
                     onClick={() => setView('dayGridMonth')}
                     className={`px-4 py-2 rounded-md ${view === 'dayGridMonth'
-                            ? 'bg-blue-500 text-white'
-                            : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300'
+                        ? 'bg-blue-500 text-white'
+                        : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300'
                         }`}
                 >
                     月
@@ -25,8 +25,8 @@ export default function Calendar() {
                 <button
                     onClick={() => setView('timeGridWeek')}
                     className={`px-4 py-2 rounded-md ${view === 'timeGridWeek'
-                            ? 'bg-blue-500 text-white'
-                            : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300'
+                        ? 'bg-blue-500 text-white'
+                        : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300'
                         }`}
                 >
                     週
@@ -34,8 +34,8 @@ export default function Calendar() {
                 <button
                     onClick={() => setView('timeGridDay')}
                     className={`px-4 py-2 rounded-md ${view === 'timeGridDay'
-                            ? 'bg-blue-500 text-white'
-                            : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300'
+                        ? 'bg-blue-500 text-white'
+                        : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300'
                         }`}
                 >
                     日
