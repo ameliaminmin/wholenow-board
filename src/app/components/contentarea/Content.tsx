@@ -36,6 +36,11 @@ export default function Content() {
                     <div className="max-w-7xl mx-auto">
                         <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-8">
                             歡迎回來，{user.displayName || user.email}
+
+                            WholeNow Board 正在全力籌備中，
+                            目前已可體驗功能，但<b>尚未加密</b>，請避免輸入私密資訊。<br />
+                            正式版預計於 2026 年推出，敬請期待！<br />
+                            歡迎留言分享想法或建議！感謝您的支持 🍀
                         </h1>
                     </div>
                 </main>
