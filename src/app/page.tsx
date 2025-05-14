@@ -24,7 +24,11 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-6">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
-              <h1 className="text-xl font-medium text-gray-900">WholeNow Board</h1>
+              <h1 className="text-xl font-medium flex items-center gap-2">
+                WholeNow Board
+                {/* pre-alpha 標籤，蘋果風格設計 */}
+                <span className="ml-2 px-2 py-0.5 text-xs font-semibold rounded-full border border-gray-300 bg-gray-100 text-gray-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300" style={{ letterSpacing: '0.05em' }}>Pre-Alpha </span>
+              </h1>
             </div>
             <div className="flex items-center space-x-4">
               <Link
@@ -59,14 +63,17 @@ export default function Home() {
         <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black/70 z-10" />
         {/* 文字內容 */}
         <div className="relative z-20 max-w-4xl mx-auto text-center">
-          <motion.h1
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="text-6xl font-bold text-white mb-8 leading-tight drop-shadow-lg dark:text-gray-100"
+            className="flex items-center justify-center gap-2"
           >
-            WholeNow Board
-          </motion.h1>
+            <h1 className="text-6xl font-bold text-white mb-8 leading-tight drop-shadow-lg dark:text-gray-100">
+              WholeNow Board
+            </h1>
+            <span className="ml-2 px-2 py-0.5 text-xs font-semibold rounded-full border border-gray-300 bg-gray-100 text-gray-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300" style={{ letterSpacing: '0.05em' }}>Pre-Alpha</span>
+          </motion.div>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -75,6 +82,22 @@ export default function Home() {
           >
             活出你想成為的版本，<br />從看見全貌開始。
           </motion.p>
+          {/* 新增：開發進度說明，低調蘋果風格設計 */}
+          {/* <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.15 }}
+            className="mb-8 flex justify-center"
+          >
+            <span
+              className="inline-block px-4 py-2 rounded-lg bg-transparent text-gray-400 text-sm font-normal border border-gray-100 dark:border-gray-700"
+              style={{ letterSpacing: '0.01em' }}
+            >
+              開發者全力籌備中
+              <span className="animate-pulse inline-block align-middle mx-1">🔥</span>
+              功能持續每日更新，歡迎體驗最新版本，與我們一同見證產品的成長與演進。
+            </span>
+          </motion.div> */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -85,7 +108,7 @@ export default function Home() {
               href="/register"
               className="px-10 py-5 text-lg font-medium bg-white text-gray-900 rounded-full hover:bg-gray-100 dark:bg-gray-100 dark:text-gray-900 dark:hover:bg-gray-200 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
             >
-              開始使用
+              體驗測試版
             </Link>
             <a
               href="#features"
