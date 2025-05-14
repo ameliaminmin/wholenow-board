@@ -70,6 +70,9 @@ export default function Calendar() {
                     // 處理日期選擇
                     console.log('Date selected:', info.startStr, 'to', info.endStr);
                 }}
+                dayHeaderClassNames="bg-gray-50 dark:bg-gray-900 text-gray-700 dark:text-gray-200"
+                dayCellClassNames="bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border-gray-200 dark:border-gray-700"
+                eventClassNames="bg-blue-500 text-white dark:bg-blue-400 dark:text-gray-900"
             />
         </div>
     );

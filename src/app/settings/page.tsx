@@ -12,7 +12,7 @@ export default function SettingsPage() {
     const [formData, setFormData] = useState({
         displayName: '',
         birthDate: '',
-        expectedLifespan: 80
+        expectedLifespan: 100
     });
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
@@ -77,7 +77,7 @@ export default function SettingsPage() {
     }
 
     return (
-        <div className="flex h-screen bg-gray-50">
+        <div className="flex h-screen bg-gray-50 dark:bg-gray-900">
             {/* 側邊欄 */}
             <Sidebar />
 
@@ -89,10 +89,10 @@ export default function SettingsPage() {
                 {/* 設定內容區域 */}
                 <main className="flex-1 overflow-y-auto p-6">
                     <div className="max-w-xl mx-auto">
-                        <h1 className="text-2xl font-semibold mb-6">個人設定</h1>
+                        <h1 className="text-2xl font-semibold mb-6 text-gray-900 dark:text-gray-100">個人設定</h1>
 
                         {error && (
-                            <div className="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded-md">
+                            <div className="mb-4 p-4 bg-red-100 dark:bg-red-900 border border-red-400 dark:border-red-700 text-red-700 dark:text-red-200 rounded-md">
                                 {error}
                             </div>
                         )}
@@ -100,7 +100,7 @@ export default function SettingsPage() {
                         <form onSubmit={handleSubmit} className="space-y-6">
                             {/* 用戶名稱設定 */}
                             <div className="space-y-2">
-                                <label htmlFor="displayName" className="block text-sm font-medium text-gray-700">
+                                <label htmlFor="displayName" className="block text-sm font-medium text-gray-700 dark:text-gray-200">
                                     用戶名稱
                                 </label>
                                 <input
@@ -108,14 +108,14 @@ export default function SettingsPage() {
                                     id="displayName"
                                     value={formData.displayName}
                                     onChange={(e) => setFormData({ ...formData, displayName: e.target.value })}
-                                    className="w-full max-w-md px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                                    className="w-full max-w-md px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500"
                                     placeholder="請輸入您的用戶名稱"
                                 />
                             </div>
 
                             {/* 出生年月日設定 */}
                             <div className="space-y-2">
-                                <label htmlFor="birthDate" className="block text-sm font-medium text-gray-700">
+                                <label htmlFor="birthDate" className="block text-sm font-medium text-gray-700 dark:text-gray-200">
                                     出生年月日
                                 </label>
                                 <input
@@ -123,13 +123,13 @@ export default function SettingsPage() {
                                     id="birthDate"
                                     value={formData.birthDate}
                                     onChange={(e) => setFormData({ ...formData, birthDate: e.target.value })}
-                                    className="w-full max-w-md px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                                    className="w-full max-w-md px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500"
                                 />
                             </div>
 
                             {/* 期望壽命設定 */}
                             <div className="space-y-2">
-                                <label htmlFor="expectedLifespan" className="block text-sm font-medium text-gray-700">
+                                <label htmlFor="expectedLifespan" className="block text-sm font-medium text-gray-700 dark:text-gray-200">
                                     期望壽命（年）
                                 </label>
                                 <div className="flex items-center space-x-2">
@@ -139,11 +139,11 @@ export default function SettingsPage() {
                                         value={formData.expectedLifespan}
                                         onChange={(e) => setFormData({ ...formData, expectedLifespan: parseInt(e.target.value) })}
                                         min={minLifespan}
-                                        max="150"
-                                        className="w-full max-w-md px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                                        max="200"
+                                        className="w-full max-w-md px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500"
                                     />
                                     {formData.birthDate && (
-                                        <span className="text-sm text-gray-500">
+                                        <span className="text-sm text-gray-500 dark:text-gray-400">
                                             （最小：{minLifespan}歲）
                                         </span>
                                     )}
@@ -154,7 +154,7 @@ export default function SettingsPage() {
                             <button
                                 type="submit"
                                 disabled={isLoading}
-                                className={`w-full max-w-md bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors ${isLoading ? 'opacity-50 cursor-not-allowed' : ''
+                                className={`w-full max-w-md bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}
                                     }`}
                             >
                                 {isLoading ? '儲存中...' : '儲存設定'}

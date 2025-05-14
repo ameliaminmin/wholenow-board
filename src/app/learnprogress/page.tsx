@@ -248,24 +248,24 @@ export default function LearnProgressPage() {
     }
 
     return (
-        <div className="flex h-screen bg-white">
+        <div className="flex h-screen bg-white dark:bg-gray-900">
             <Sidebar />
             <div className="flex-1 flex flex-col overflow-hidden">
                 <TopNav />
                 <div className="flex-1 overflow-y-auto">
-                    <div className="bg-white min-h-screen p-10 pt-2 font-sans">
-                        <div className="flex items-center gap-4 mb-4 sticky top-0 bg-white z-10 py-4">
+                    <div className="bg-white dark:bg-gray-900 min-h-screen p-10 pt-2 font-sans">
+                        <div className="flex items-center gap-4 mb-4 sticky top-0 bg-white dark:bg-gray-900 z-10 py-4">
                             <div className="relative">
                                 <span
                                     onClick={() => setShowYearDropdown(!showYearDropdown)}
-                                    className="text-2xl font-bold cursor-pointer hover:text-blue-600"
+                                    className="text-2xl font-bold cursor-pointer hover:text-blue-600 dark:hover:text-blue-400"
                                 >
                                     {selectedYear}
                                 </span>
                                 {showYearDropdown && (
                                     <div
                                         ref={yearDropdownRef}
-                                        className="absolute top-full left-0 mt-1 bg-white border border-gray-200 rounded shadow-lg max-h-48 overflow-y-auto z-10"
+                                        className="absolute top-full left-0 mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded shadow-lg max-h-48 overflow-y-auto z-10"
                                     >
                                         {yearOptions.map(year => {
                                             const isCurrentYear = year === new Date().getFullYear();
@@ -273,7 +273,7 @@ export default function LearnProgressPage() {
                                                 <div
                                                     key={year}
                                                     data-year={year}
-                                                    className={`px-4 py-2 hover:bg-gray-100 cursor-pointer ${isCurrentYear ? 'bg-blue-50' : ''}`}
+                                                    className={`px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer ${isCurrentYear ? 'bg-blue-50 dark:bg-blue-900' : ''}`}
                                                     onClick={() => {
                                                         setSelectedYear(year);
                                                         setShowYearDropdown(false);
@@ -290,18 +290,18 @@ export default function LearnProgressPage() {
                             <div className="relative">
                                 <span
                                     onClick={() => setShowMonthDropdown(!showMonthDropdown)}
-                                    className="text-2xl font-bold cursor-pointer hover:text-blue-600"
+                                    className="text-2xl font-bold cursor-pointer hover:text-blue-600 dark:hover:text-blue-400"
                                 >
                                     {selectedMonth + 1}
                                 </span>
                                 {showMonthDropdown && (
-                                    <div className="absolute top-full left-0 mt-1 bg-white border border-gray-200 rounded shadow-lg z-10">
+                                    <div className="absolute top-full left-0 mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded shadow-lg z-10">
                                         {monthOptions.map(month => {
                                             const isCurrentMonth = month === new Date().getMonth();
                                             return (
                                                 <div
                                                     key={month}
-                                                    className={`px-4 py-2 hover:bg-gray-100 cursor-pointer ${isCurrentMonth ? 'bg-blue-50' : ''}`}
+                                                    className={`px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer ${isCurrentMonth ? 'bg-blue-50 dark:bg-blue-900' : ''}`}
                                                     onClick={() => {
                                                         setSelectedMonth(month);
                                                         setShowMonthDropdown(false);
@@ -327,24 +327,24 @@ export default function LearnProgressPage() {
                                             firstDayOfMonth.setDate(firstDayOfMonth.getDate() + daysToAdd);
                                             setSelectedWeek(week);
                                         }}
-                                        className={`w-3 h-3 rounded-full border border-gray-300 cursor-pointer transition-all duration-200 ${week === selectedWeek
+                                        className={`w-3 h-3 rounded-full border border-gray-300 dark:border-gray-600 cursor-pointer transition-all duration-200 ${week === selectedWeek
                                             ? 'bg-blue-500 border-blue-500'
-                                            : 'hover:border-blue-400'
+                                            : 'hover:border-blue-400 dark:hover:border-blue-300'
                                             }`}
                                     />
                                 ))}
                             </div>
                         </div>
-                        <table className="w-full border-collapse bg-white">
+                        <table className="w-full border-collapse bg-white dark:bg-gray-900">
                             <thead>
                                 <tr>
-                                    <th className="border border-gray-200 p-2 font-semibold bg-gray-50 text-left w-12 text-sm">星期</th>
-                                    <th className="border border-gray-200 p-2 font-semibold bg-gray-50 text-left w-12 text-sm">日期</th>
-                                    <th className="border border-gray-200 p-2 font-semibold bg-gray-50 text-left w-[10%] text-sm">目標</th>
-                                    <th className="border border-gray-200 p-2 font-semibold bg-gray-50 text-left w-[12%] text-sm">成果</th>
-                                    <th className="border border-gray-200 p-2 font-semibold bg-gray-50 text-left w-[8%] text-sm">時數</th>
-                                    <th className="border border-gray-200 p-2 font-semibold bg-gray-50 text-left flex-[2] text-sm">筆記</th>
-                                    <th className="border border-gray-200 p-2 font-semibold bg-gray-50 text-left flex-[1.5] text-sm">疑問</th>
+                                    <th className="border border-gray-200 dark:border-gray-700 p-2 font-semibold bg-gray-50 dark:bg-gray-800 text-left w-12 text-sm">星期</th>
+                                    <th className="border border-gray-200 dark:border-gray-700 p-2 font-semibold bg-gray-50 dark:bg-gray-800 text-left w-12 text-sm">日期</th>
+                                    <th className="border border-gray-200 dark:border-gray-700 p-2 font-semibold bg-gray-50 dark:bg-gray-800 text-left w-[10%] text-sm">目標</th>
+                                    <th className="border border-gray-200 dark:border-gray-700 p-2 font-semibold bg-gray-50 dark:bg-gray-800 text-left w-[12%] text-sm">成果</th>
+                                    <th className="border border-gray-200 dark:border-gray-700 p-2 font-semibold bg-gray-50 dark:bg-gray-800 text-left w-[8%] text-sm">時數</th>
+                                    <th className="border border-gray-200 dark:border-gray-700 p-2 font-semibold bg-gray-50 dark:bg-gray-800 text-left flex-[2] text-sm">筆記</th>
+                                    <th className="border border-gray-200 dark:border-gray-700 p-2 font-semibold bg-gray-50 dark:bg-gray-800 text-left flex-[1.5] text-sm">疑問</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -355,14 +355,14 @@ export default function LearnProgressPage() {
                                         <tr
                                             key={date}
                                             ref={isToday ? todayRowRef : null}
-                                            className={`${isToday ? 'bg-blue-50' : ''}`}
+                                            className={`${isToday ? 'bg-blue-50 dark:bg-blue-900' : ''}`}
                                         >
-                                            <td className="border border-gray-200 p-2 w-12 text-sm">{weekDay}</td>
-                                            <td className={`border border-gray-200 p-2 w-12 text-sm ${isToday ? 'font-bold text-blue-600' : ''}`}>
+                                            <td className="border border-gray-200 dark:border-gray-700 p-2 w-12 text-sm">{weekDay}</td>
+                                            <td className={`border border-gray-200 dark:border-gray-700 p-2 w-12 text-sm ${isToday ? 'font-bold text-blue-600 dark:text-blue-300' : ''}`}>
                                                 {month !== selectedMonth ? `${month + 1}/${date}` : date}
                                             </td>
                                             {fields.map((field) => (
-                                                <td key={field} className="border border-gray-200 p-0 text-sm h-14">
+                                                <td key={field} className="border border-gray-200 dark:border-gray-700 p-0 text-sm h-14 bg-white dark:bg-gray-900">
                                                     <MarkdownCell
                                                         value={progressData[dateKey]?.[field] || ''}
                                                         onChange={(newValue) => {

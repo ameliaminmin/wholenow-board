@@ -22,7 +22,7 @@ export default function Content() {
     }
 
     return (
-        <div className="flex h-screen bg-white">
+        <div className="flex h-screen bg-white dark:bg-gray-900">
             {/* 側邊欄 */}
             <Sidebar />
 
@@ -34,14 +34,18 @@ export default function Content() {
                 {/* 內容區域 */}
                 <main className="flex-1 overflow-y-auto p-6">
                     <div className="max-w-7xl mx-auto">
-                        <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-8">
-                            歡迎回來，{user.displayName || user.email}
+                        <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-8">
+                            👋 &nbsp; 歡迎回來，{user.displayName || user.email}<br />
 
-                            WholeNow Board 正在全力籌備中，
-                            目前已可體驗功能，但<b>尚未加密</b>，請避免輸入私密資訊。<br />
-                            正式版預計於 2026 年推出，敬請期待！<br />
-                            歡迎留言分享想法或建議！感謝您的支持 🍀
                         </h1>
+                        <div className="text-gray-600 dark:text-gray-300">
+                            <p>
+                                感謝您體驗 WholeNow Board —— 全方位的智慧筆記平台。<br />
+                                目前為開發版本，尚未啟用加密機制，請避免輸入敏感資訊。<br />
+                                正式版本預計於 2026 年 上線，敬請期待！<br />
+
+                            </p>
+                        </div>
                     </div>
                 </main>
             </div>

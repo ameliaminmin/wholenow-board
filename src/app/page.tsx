@@ -18,9 +18,9 @@ export default function Home() {
   }, [user, router]);
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white dark:bg-gray-900">
       {/* 導航欄 */}
-      <nav className="fixed top-0 w-full bg-white/80 backdrop-blur-xl border-b border-gray-100 z-50">
+      <nav className="fixed top-0 w-full bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border-b border-gray-100 dark:border-gray-800 z-50">
         <div className="max-w-7xl mx-auto px-6">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
@@ -45,7 +45,7 @@ export default function Home() {
       </nav>
 
       {/* Hero 區域 */}
-      <section className="relative min-h-[600px] flex items-center justify-center pt-32 pb-24 px-6 overflow-hidden">
+      <section className="relative min-h-[600px] flex items-center justify-center pt-32 pb-24 px-6 overflow-hidden bg-white dark:bg-gray-900">
         {/* 背景圖片 */}
         <Image
           src="/images/wholenowboard05.JPG"
@@ -63,7 +63,7 @@ export default function Home() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="text-6xl font-bold text-white mb-8 leading-tight drop-shadow-lg"
+            className="text-6xl font-bold text-white mb-8 leading-tight drop-shadow-lg dark:text-gray-100"
           >
             WholeNow Board
           </motion.h1>
@@ -71,7 +71,7 @@ export default function Home() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
-            className="text-3xl font-medium text-white mb-12 drop-shadow max-w-2xl mx-auto"
+            className="text-3xl font-medium text-white mb-12 drop-shadow max-w-2xl mx-auto dark:text-gray-200"
           >
             活出你想成為的版本，<br />從看見全貌開始。
           </motion.p>
@@ -83,13 +83,13 @@ export default function Home() {
           >
             <Link
               href="/register"
-              className="px-10 py-5 text-lg font-medium bg-white text-gray-900 rounded-full hover:bg-gray-100 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+              className="px-10 py-5 text-lg font-medium bg-white text-gray-900 rounded-full hover:bg-gray-100 dark:bg-gray-100 dark:text-gray-900 dark:hover:bg-gray-200 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
             >
               開始使用
             </Link>
             <a
               href="#features"
-              className="px-10 py-5 text-lg font-medium text-white border-2 border-white/80 rounded-full hover:bg-white/10 transition-all hover:border-white cursor-pointer"
+              className="px-10 py-5 text-lg font-medium text-white border-2 border-white/80 rounded-full hover:bg-white/10 dark:border-gray-200 dark:text-gray-100 dark:hover:bg-gray-800 transition-all hover:border-white cursor-pointer"
               onClick={(e) => {
                 e.preventDefault();
                 document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' });
@@ -102,16 +102,16 @@ export default function Home() {
       </section>
 
       {/* 產品描述過渡區域 */}
-      <section className="py-16 bg-white">
+      <section className="py-16 bg-white dark:bg-gray-900">
         <div className="max-w-4xl mx-auto px-6">
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
-            className="text-xl text-gray-600 text-center leading-relaxed"
+            className="text-xl text-gray-600 dark:text-gray-300 text-center leading-relaxed"
           >
-            這是一款結合 <span className="font-medium text-gray-900">視覺化時間軸</span> × <span className="font-medium text-gray-900">個人Wiki</span> × <span className="font-medium text-gray-900">夢想板</span> 的全方位行事曆筆記系統，
+            這是一款結合 <span className="font-medium text-gray-900 dark:text-gray-300">視覺化時間軸</span> × <span className="font-medium text-gray-900 dark:text-gray-300">個人Wiki</span> × <span className="font-medium text-gray-900 dark:text-gray-300">夢想板</span> 的全方位行事曆筆記系統，
             <br />
             幫助你整理人生、釐清方向、紀錄成長。
           </motion.p>
@@ -119,9 +119,9 @@ export default function Home() {
       </section>
 
       {/* 目標用戶區域 */}
-      <section className="py-24">
+      <section className="py-24 dark:bg-gray-900">
         <div className="max-w-4xl mx-auto px-6">
-          <h2 className="text-3xl font-medium text-gray-900 mb-12 text-center">
+          <h2 className="text-3xl font-medium text-gray-900 dark:text-gray-100 mb-12 text-center">
             👥 給誰使用？
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -137,9 +137,9 @@ export default function Home() {
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="p-6 bg-white rounded-2xl shadow-sm border border-gray-100"
+                className="p-6 bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700"
               >
-                <p className="text-gray-600">{item}</p>
+                <p className="text-gray-600 dark:text-gray-300">{item}</p>
               </motion.div>
             ))}
           </div>
@@ -147,13 +147,13 @@ export default function Home() {
       </section>
 
       {/* 核心價值區域 */}
-      <section className="py-16 bg-gray-50">
+      <section className="py-16 bg-gray-50 dark:bg-gray-800">
         <div className="max-w-2xl mx-auto px-6">
           <div className="text-center mb-16">
-            <h2 className="text-3xl font-medium text-gray-900 mb-6">
+            <h2 className="text-3xl font-medium text-gray-900 dark:text-gray-100 mb-6">
               它不只是安排日子，而是在幫助你看見：
             </h2>
-            <div className="flex flex-col sm:flex-row justify-center gap-8 text-lg text-gray-600">
+            <div className="flex flex-col sm:flex-row justify-center gap-8 text-lg text-gray-600 dark:text-gray-300">
               <div className="flex items-center gap-2">
                 <span className="text-blue-500">🔸</span>
                 <span>你是誰</span>
@@ -171,9 +171,9 @@ export default function Home() {
         </div>
       </section>
       {/* 核心功能區域 */}
-      <section id="features" className="py-24 bg-gray-50">
+      <section id="features" className="py-24 bg-gray-50 dark:bg-gray-800">
         <div className="max-w-4xl mx-auto px-6">
-          <h2 className="text-3xl font-medium text-gray-900 mb-16 text-center">
+          <h2 className="text-3xl font-medium text-gray-900 dark:text-gray-100 mb-16 text-center">
             🌟 核心功能
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -209,11 +209,11 @@ export default function Home() {
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="p-8 bg-white rounded-2xl shadow-sm border border-gray-100"
+                className="p-8 bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700"
               >
                 <div className="text-3xl mb-4">{feature.icon}</div>
-                <h3 className="text-xl font-medium text-gray-900 mb-3">{feature.title}</h3>
-                <p className="text-gray-600 leading-relaxed">{feature.description}</p>
+                <h3 className="text-xl font-medium text-gray-900 dark:text-gray-100 mb-3">{feature.title}</h3>
+                <p className="text-gray-600 dark:text-gray-300 leading-relaxed">{feature.description}</p>
               </motion.div>
             ))}
           </div>
@@ -221,14 +221,14 @@ export default function Home() {
       </section>
 
       {/* 信念區域 */}
-      <section className="py-24">
+      <section className="py-24 dark:bg-gray-900">
         <div className="max-w-4xl mx-auto px-6 text-center">
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
-            className="text-3xl font-medium text-gray-900 mb-8"
+            className="text-3xl font-medium text-gray-900 dark:text-gray-100 mb-8"
           >
             我們相信
           </motion.h2>
@@ -238,13 +238,13 @@ export default function Home() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.3 }}
             viewport={{ once: true }}
-            className="text-xl text-gray-600 mb-12 leading-relaxed"
+            className="text-xl text-gray-600 dark:text-gray-300 mb-12 leading-relaxed"
           >
             「不是要做更多事，而是要做對的事。
             <br />
             不是要掌控人生，而是與它同頻共舞。」
           </motion.p>
-          <p className="text-lg text-gray-600 leading-relaxed">
+          <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
             WholeNow Board 是一面鏡子，也是畫布。
             <br />
             是人生的儀式感，也是日常的管理術。
@@ -257,10 +257,10 @@ export default function Home() {
       </section>
 
       {/* 頁尾 */}
-      <footer className="bg-gray-50 border-t border-gray-100">
+      <footer className="bg-gray-50 dark:bg-gray-800 border-t border-gray-100 dark:border-gray-700">
         <div className="max-w-7xl mx-auto px-6 py-12">
           <div className="text-center">
-            <p className="text-gray-500 text-sm">
+            <p className="text-gray-500 dark:text-gray-400 text-sm">
               © 2024 WholeNow Board. All rights reserved.
             </p>
           </div>

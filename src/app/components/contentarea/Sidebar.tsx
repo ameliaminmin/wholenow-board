@@ -60,11 +60,11 @@ export default function Sidebar() {
     };
 
     return (
-        <div className={`bg-white h-screen transition-all duration-300 ease-in-out ${isCollapsed ? 'w-16' : 'w-48'} border-r border-gray-200`}>
+        <div className={`bg-white dark:bg-gray-900 h-screen transition-all duration-300 ease-in-out ${isCollapsed ? 'w-16' : 'w-48'} border-r border-gray-200 dark:border-gray-800`}>
             {/* 用戶信息區域 */}
             <div className="flex items-center p-3 relative">
                 <div
-                    className="relative w-8 h-8 rounded-full overflow-hidden bg-gray-100 cursor-pointer"
+                    className="relative w-8 h-8 rounded-full overflow-hidden bg-gray-100 dark:bg-gray-800 cursor-pointer"
                     onClick={() => setShowDropdown(!showDropdown)}
                 >
                     <svg
@@ -86,17 +86,17 @@ export default function Sidebar() {
                 </div>
                 {!isCollapsed && (
                     <div className="ml-2">
-                        <p className="text-sm font-medium text-gray-900 truncate">{user?.displayName || user?.email}</p>
-                        <p className="text-xs text-gray-500">&apos;s WholeNow Board</p>
+                        <p className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">{user?.displayName || user?.email}</p>
+                        <p className="text-xs text-gray-500 dark:text-gray-400">&apos;s WholeNow Board</p>
                     </div>
                 )}
 
                 {/* 下拉選單 */}
                 {showDropdown && (
-                    <div className="absolute left-3 top-12 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                    <div className="absolute left-3 top-12 z-10 mt-2 w-48 origin-top-right rounded-md bg-white dark:bg-gray-800 py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                         <button
                             onClick={handleLogout}
-                            className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
+                            className="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 w-full text-left"
                         >
                             <ArrowLeftOnRectangleIcon className="h-4 w-4 mr-2" />
                             登出
@@ -108,7 +108,7 @@ export default function Sidebar() {
             {/* 收合按鈕 */}
             <button
                 onClick={() => setIsCollapsed(!isCollapsed)}
-                className="w-full p-3 flex items-center justify-end hover:bg-gray-50"
+                className="w-full p-3 flex items-center justify-end hover:bg-gray-50 dark:hover:bg-gray-800"
             >
                 {isCollapsed ? (
                     <ChevronRightIcon className="h-4 w-4 text-gray-500" />
@@ -123,7 +123,7 @@ export default function Sidebar() {
                     <Link
                         key={item.name}
                         href={item.href}
-                        className="flex items-center px-3 py-2 text-gray-700 hover:bg-gray-50 hover:text-gray-900"
+                        className="flex items-center px-3 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white"
                     >
                         <item.icon className="h-5 w-5" />
                         {!isCollapsed && (
