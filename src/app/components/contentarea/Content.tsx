@@ -38,11 +38,18 @@ export default function Content() {
                             👋 &nbsp; 歡迎回來，{user.displayName || user.email}<br />
 
                         </h1>
-                        <div className="text-gray-600 dark:text-gray-300">
+                        <div className="text-sm text-gray-600 dark:text-gray-300">
                             <p>
                                 感謝您體驗 WholeNow Board —— 您的全方位人生整合導覽板。<br />
-                                目前為測試版本，尚未啟用加密機制，請避免輸入敏感資訊。<br />
+                                目前為測試版本，尚未啟用加密機制，<b>請避免輸入敏感資訊</b>。<br />
                                 正式版本預計於 2026 年 上線，敬請期待！<br />
+
+                                <br />
+                                <br />
+                                使用說明：<br />
+                                請先至設定區選擇您的生日及希望壽命，<br />
+                                接著就可以到各個時間軸探索囉！<br />
+
 
                             </p>
                         </div>
