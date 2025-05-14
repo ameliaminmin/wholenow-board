@@ -40,7 +40,7 @@ export default function Content() {
                         </h1>
                         <div className="text-sm text-gray-600 dark:text-gray-300">
                             <p>
-                                感謝您體驗 WholeNow Board —— 您的全方位人生整合導覽板。<br />
+                                感謝您體驗 WholeNow Board —— 您的全方位人生導覽板。<br />
                                 目前為測試版本，尚未啟用加密機制，<b>請避免輸入敏感資訊</b>。<br />
                                 正式版本預計於 2026 年 上線，敬請期待！<br />
 

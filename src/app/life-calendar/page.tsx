@@ -98,8 +98,14 @@ export default function LifeCalendar() {
 
     // 處理編輯開始
     const handleEditStart = (year: number) => {
-        setEditingCell(year);
-        setEditContent(cellContents[year] || '');
+        // 如果是1歲且內容為空，預設帶入「{用戶名稱}出生了！」
+        if (year === 1 && !cellContents[year]) {
+            setEditingCell(year);
+            setEditContent(`${userName}出生了！`);
+        } else {
+            setEditingCell(year);
+            setEditContent(cellContents[year] || '');
+        }
     };
 
     // 處理編輯結束
@@ -125,61 +131,114 @@ export default function LifeCalendar() {
                 const isPast = year < currentAge;
                 const isCurrent = year === currentAge;
                 const isEditing = editingCell === year;
-                const content = cellContents[year] || '';
+                let content = cellContents[year] || '';
 
-                cells.push(
-                    <div
-                        key={year}
-                        className={`
-                            relative group 
-                            w-full
-                            min-h-[38px] h-auto
-                            transition-all duration-300
-                            ${isPast ? 'bg-yellow-100 dark:bg-yellow-900 border border-yellow-200 dark:border-yellow-800 text-gray-900 dark:text-yellow-100' :
-                                isCurrent ? 'bg-blue-100 dark:bg-blue-900 border-2 border-blue-500 text-gray-900 dark:text-blue-100' :
-                                    'bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-400'}
-                            ${isEditing ? 'ring-2 ring-blue-500' : ''}
-                            hover:shadow-sm
-                            rounded-sm
-                            overflow-hidden
-                        `}
-                        title={`${year}歲`}
-                        onClick={() => !isEditing && handleEditStart(year)}
-                    >
-                        <div className={`absolute top-0 left-0 text-[8px] px-1 bg-white/50 dark:bg-gray-900/60 rounded-br-sm z-10
-                            ${isPast ? 'text-yellow-700 dark:text-yellow-200' :
-                                isCurrent ? 'text-blue-700 dark:text-blue-200' :
-                                    'text-gray-500 dark:text-gray-500'}
-                        `}>
-                            {year}
-                        </div>
-                        {isEditing ? (
-                            <textarea
-                                className="w-full h-full p-1.5 text-xs resize-none focus:outline-none pt-4 bg-transparent dark:bg-gray-900"
-                                value={editContent}
-                                onChange={(e) => setEditContent(e.target.value)}
-                                onBlur={handleEditEnd}
-                                onKeyDown={(e) => {
-                                    if (e.key === 'Enter' && e.metaKey) {
-                                        handleEditEnd();
-                                    }
-                                }}
-                                autoFocus
-                                style={{ minHeight: '60px' }}
-                            />
-                        ) : (
-                            <div className="w-full h-full p-1.5 overflow-auto pt-4">
-                                <div className="text-xs prose prose-sm max-w-none break-words text-gray-900 dark:text-gray-100">
-                                    <ReactMarkdown
-                                        remarkPlugins={[remarkGfm]}
-                                    >
-                                        {content}
-                                    </ReactMarkdown>
+                // 1歲格子預設顯示「{用戶名稱}出生了！」
+                if (year === 1 && !content) {
+                    content = `${userName}&nbsp;出生了！`;
+                }
+                // 今年格子：外層漸層外框，內層維持黃色背景
+                if (isCurrent) {
+                    // 若今年格子內容為空，顯示預設提示文字
+                    const displayContent = content ? content : '點擊輸入今年人生大事...';
+                    cells.push(
+                        <div key={year} className="border-spring-gradient">
+                            <div
+                                className={`
+                                    relative group
+                                    w-full h-full
+                                    min-h-[38px]
+                                    transition-all duration-300
+                                    bg-yellow-100 dark:bg-yellow-900 text-gray-900 dark:text-yellow-100
+                                    rounded-sm
+                                    overflow-hidden
+                                `}
+                                title={`${year}歲`}
+                                onClick={() => !isEditing && handleEditStart(year)}
+                            >
+                                <div className={`absolute top-0 left-0 text-[8px] px-1 bg-white/50 dark:bg-gray-900/60 rounded-br-sm z-10 text-yellow-700 dark:text-yellow-200`}>
+                                    {year}
                                 </div>
+                                {isEditing ? (
+                                    <textarea
+                                        className="w-full h-full p-1.5 text-xs resize-none focus:outline-none pt-4 bg-transparent dark:bg-gray-900"
+                                        value={editContent}
+                                        onChange={(e) => setEditContent(e.target.value)}
+                                        onBlur={handleEditEnd}
+                                        onKeyDown={(e) => {
+                                            if (e.key === 'Enter' && e.metaKey) {
+                                                handleEditEnd();
+                                            }
+                                        }}
+                                        autoFocus
+                                        style={{ minHeight: '60px' }}
+                                    />
+                                ) : (
+                                    <div className="w-full h-full p-1.5 overflow-auto pt-4">
+                                        {/* 顯示格子內容，支援Markdown，若為預設內容也會顯示 */}
+                                        <div className={`text-xs prose prose-sm max-w-none break-words text-spring-gradient`}>
+                                            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                                                {displayContent}
+                                            </ReactMarkdown>
+                                        </div>
+                                    </div>
+                                )}
                             </div>
-                        )}
-                    </div>
-                );
+                        </div>
+                    );
+                } else {
+                    // 其他年份格子
+                    cells.push(
+                        <div
+                            key={year}
+                            className={`
+                                relative group 
+                                w-full
+                                min-h-[38px] h-auto
+                                transition-all duration-300
+                                ${isPast ? 'bg-yellow-100 dark:bg-yellow-900 border border-yellow-200 dark:border-yellow-800 text-gray-900 dark:text-yellow-100' :
+                                    'bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-400'}
+                                ${isEditing ? 'border-yellow-500-custom' : ''}
+                                hover:shadow-sm
+                                rounded-sm
+                                overflow-hidden
+                            `}
+                            title={`${year}歲`}
+                            onClick={() => !isEditing && handleEditStart(year)}
+                        >
+                            <div className={`absolute top-0 left-0 text-[8px] px-1 bg-white/50 dark:bg-gray-900/60 rounded-br-sm z-10
+                                ${isPast ? 'text-yellow-700 dark:text-yellow-200' :
+                                    'text-gray-500 dark:text-gray-500'}
+                            `}>
+                                {year}
+                            </div>
+                            {isEditing ? (
+                                <textarea
+                                    className="w-full h-full p-1.5 text-xs resize-none focus:outline-none pt-4 bg-transparent dark:bg-gray-900"
+                                    value={editContent}
+                                    onChange={(e) => setEditContent(e.target.value)}
+                                    onBlur={handleEditEnd}
+                                    onKeyDown={(e) => {
+                                        if (e.key === 'Enter' && e.metaKey) {
+                                            handleEditEnd();
+                                        }
+                                    }}
+                                    autoFocus
+                                    style={{ minHeight: '60px' }}
+                                />
+                            ) : (
+                                <div className="w-full h-full p-1.5 overflow-auto pt-4">
+                                    {/* 顯示格子內容，支援Markdown，若為預設內容也會顯示 */}
+                                    <div className="text-xs prose prose-sm max-w-none break-words text-gray-900 dark:text-gray-100">
+                                        <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                                            {content}
+                                        </ReactMarkdown>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    );
+                }
             }
 
             grid.push(

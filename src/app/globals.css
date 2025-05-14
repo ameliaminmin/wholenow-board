@@ -24,3 +24,29 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* 春天漸層邊框：綠-黃-粉-藍，符合 Apple 清新感 */
+.border-spring-gradient {
+  background: linear-gradient(90deg, #a8e063 0%, #f9f871 40%, #fcb1e2 80%, #7fd8f7 100%);
+  padding: 2px;
+  /* 外框寬度 */
+  border-radius: 0.25rem;
+  /* 不設 border，不設 box-shadow，讓內層 div 控制內容背景 */
+}
+
+/* 黃色外框，hover/active 狀態更明顯 */
+.border-yellow-500-custom {
+  border-width: 2px;
+  border-style: solid;
+  border-color: #facc15 !important;
+  border-radius: 0.125rem;
+}
+
+/* 春天漸層文字色：綠-黃-粉-藍，與外框一致，黃色加深 */
+.text-spring-gradient {
+  background: linear-gradient(90deg, #a8e063 0%, #eab308 40%, #fcb1e2 80%, #7fd8f7 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+}
