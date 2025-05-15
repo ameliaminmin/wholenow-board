@@ -36,7 +36,7 @@ export default function Day90Progress() {
                 }
 
                 // 加载笔记
-                for (let i = 1; i <= 90; i++) {
+                for (let i = 1; i <= 91; i++) {  // 将90改为91以包含第91天
                     const noteDoc = await getDoc(doc(db, 'users', user.uid, '90day-progress', `day-${i}`));
                     if (noteDoc.exists()) {
                         setNotes(prev => ({ ...prev, [i]: noteDoc.data().content || '' }));
@@ -167,7 +167,23 @@ export default function Day90Progress() {
                                 >
                                     {index === 90 ? (
                                         <div className="w-full h-full flex items-center justify-center text-center p-2">
-                                            <span className="font-bold">恭喜達成!</span>
+                                            {editingDay === 91 ? (  // 明确使用91
+                                                <textarea
+                                                    autoFocus
+                                                    value={notes[91] || ''}
+                                                    onChange={(e) => handleNoteChange(91, e.target.value)}
+                                                    onBlur={() => setEditingDay(null)}
+                                                    className="w-full h-full p-1 text-sm bg-transparent resize-none outline-none"
+                                                    style={{ lineHeight: '1.2', whiteSpace: 'pre-wrap' }}
+                                                />
+                                            ) : (
+                                                <span 
+                                                    className="font-bold text-sm cursor-pointer"
+                                                    onClick={() => setEditingDay(91)}  // 明确使用91
+                                                >
+                                                    {notes[91] || '恭喜達成!'}
+                                                </span>
+                                            )}
                                         </div>
                                     ) : (
                                         <>
