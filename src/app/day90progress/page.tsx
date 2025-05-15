@@ -14,6 +14,7 @@ export default function Day90Progress() {
     const [notes, setNotes] = useState<Record<number, string>>({});
     const [editingDay, setEditingDay] = useState<number | null>(null);
     const [goal, setGoal] = useState('');
+    const [remark, setRemark] = useState(''); // 新增備註狀態
 
     // 加载用户保存的数据
     useEffect(() => {
@@ -40,6 +41,12 @@ export default function Day90Progress() {
                     if (noteDoc.exists()) {
                         setNotes(prev => ({ ...prev, [i]: noteDoc.data().content || '' }));
                     }
+                }
+
+                // 加载備註
+                const remarkDoc = await getDoc(doc(db, 'users', user.uid, '90day-progress', 'remark'));
+                if (remarkDoc.exists()) {
+                    setRemark(remarkDoc.data().text || '');
                 }
             }
         };
@@ -88,6 +95,17 @@ export default function Day90Progress() {
         }
     };
 
+    const handleRemarkChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const newRemark = e.target.value;
+        setRemark(newRemark);
+        if (user) {
+            await setDoc(doc(db, 'users', user.uid, '90day-progress', 'remark'), {
+                text: newRemark,
+                updatedAt: new Date()
+            });
+        }
+    };
+
     return (
         <div className="flex h-screen bg-gray-50 dark:bg-gray-900">
             {/* 側導覽列 */}
@@ -95,14 +113,14 @@ export default function Day90Progress() {
 
             {/* 主內容區 */}
             <div className="flex-1 flex flex-col overflow-hidden">
-                {/* 上導覽列 */}
-                <TopNav />
+                {/* 移除上導覽列 */}
+                {/* <TopNav /> */}
 
                 {/* 頁面內容 */}
                 <main className="flex-1 overflow-y-auto p-4">
                     <div className="flex justify-between items-start mb-6">
-                        <div className="flex items-start gap-4">
-                            <h1 className="text-m font-bold text-gray-800 dark:text-gray-200 mt-1">
+                        <div className="flex items-center gap-2">
+                            <h1 className="text-m font-bold text-gray-800 dark:text-gray-200">
                                 90天目標：
                             </h1>
                             <input
@@ -110,10 +128,17 @@ export default function Day90Progress() {
                                 value={goal}
                                 onChange={handleGoalChange}
                                 placeholder="輸入目標..."
-                                className="text-2xl font-bold px-3 py-1 w-150 bg-gradient-to-r from-blue-700 via-blue-600 to-blue-500 text-transparent bg-clip-text"
+                                className="text-m font-bold px-3 py-1 w-90 text-gray-800 dark:text-gray-200  "
                             />
                         </div>
                         <div className="flex items-center gap-2">
+                            <input
+                                type="text"
+                                value={remark}
+                                onChange={handleRemarkChange}
+                                placeholder="備註..."
+                                className="text-sm border rounded px-2 py-1 text-gray-400 dark:text-gray-500"
+                            />
                             <span className="text-sm text-gray-600 dark:text-gray-400">開始日期:</span>
                             <input
                                 type="date"
@@ -131,14 +156,14 @@ export default function Day90Progress() {
                                 <div
                                     key={index}
                                     onClick={() => setEditingDay(index + 1)}
-                                    className={`aspect-[1/0.35] rounded shadow-sm border ${editingDay === index + 1
+                                    className={`aspect-[1/0.2] rounded shadow-sm border ${editingDay === index + 1
                                         ? 'border-blue-500 dark:border-blue-400'
                                         : 'border-gray-200 dark:border-gray-700'
                                         } relative p-1 ${index === 90
                                             ? 'bg-gradient-to-r from-blue-500 to-blue-700 text-white'
                                             : new Date(startDate).getTime() + (index * 86400000) < Date.now()
                                                 ? 'bg-blue-100 dark:bg-blue-900/30'
-                                                : 'bg-white dark:bg-gray-800'}`}
+                                                : 'bg-white dark:bg-gray-800'} ${(index + 1) % 28 === 0 ? 'mb-4' : ''}`}
                                 >
                                     {index === 90 ? (
                                         <div className="w-full h-full flex items-center justify-center text-center p-2">
@@ -153,10 +178,6 @@ export default function Day90Progress() {
                                                 <div className="text-[10px] text-gray-400 dark:text-gray-500 -mb-1">
                                                     {getDayDate(index)}
                                                 </div>
-                                                <input
-                                                    type="checkbox"
-                                                    className="h-3.8 w-3.8 rounded border-gray-300 text-blue-600 focus:ring-blue-500 -mt-2"
-                                                />
                                             </div>
 
                                             {editingDay === index + 1 ? (
