@@ -1,7 +1,6 @@
 'use client';
 
 import Sidebar from '@/app/components/contentarea/Sidebar';
-import TopNav from '@/app/components/contentarea/TopNav';
 import { useState, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
