@@ -30,6 +30,24 @@ const CalendarIcon = (props: React.SVGProps<SVGSVGElement>) => (
     </svg>
 );
 
+// 自定義90天計劃圖標組件
+const NinetyDaysIcon = (props: React.SVGProps<SVGSVGElement>) => (
+    <svg
+        className="w-5 h-5"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+        {...props}
+    >
+        <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={1.6}
+            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+        />
+    </svg>
+);
+
 // 導航項目類型定義
 type NavItem = {
     name: string;
@@ -42,6 +60,7 @@ const navigation: NavItem[] = [
     { name: '首頁', href: '/', icon: HomeIcon },
     { name: '人生年曆', href: '/life-calendar', icon: CalendarIcon },
     { name: '學習進度表', href: '/learnprogress', icon: AcademicCapIcon },
+    { name: '90天計劃', href: '/day90progress', icon: NinetyDaysIcon },
     { name: '設定', href: '/settings', icon: Cog6ToothIcon },
 ];
 
