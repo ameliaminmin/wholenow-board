@@ -2,15 +2,49 @@
 
 import Sidebar from '@/app/components/contentarea/Sidebar';
 import TopNav from '@/app/components/contentarea/TopNav';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
-import { doc, setDoc } from 'firebase/firestore';
+import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase/config';
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function Day90Progress() {
+    const { user } = useAuth();
     const [startDate, setStartDate] = useState(new Date());
     const [notes, setNotes] = useState<Record<number, string>>({});
     const [editingDay, setEditingDay] = useState<number | null>(null);
+    const [goal, setGoal] = useState('');
+
+    // 加载用户保存的数据
+    useEffect(() => {
+        const loadUserData = async () => {
+            if (user) {
+                // 加载开始日期
+                const dateDoc = await getDoc(doc(db, 'users', user.uid, '90day-progress', 'settings'));
+                if (dateDoc.exists()) {
+                    const data = dateDoc.data();
+                    if (data.startDate) {
+                        setStartDate(data.startDate.toDate());
+                    }
+                }
+
+                // 加载目标
+                const goalDoc = await getDoc(doc(db, 'users', user.uid, '90day-progress', 'goal'));
+                if (goalDoc.exists()) {
+                    setGoal(goalDoc.data().text || '');
+                }
+
+                // 加载笔记
+                for (let i = 1; i <= 90; i++) {
+                    const noteDoc = await getDoc(doc(db, 'users', user.uid, '90day-progress', `day-${i}`));
+                    if (noteDoc.exists()) {
+                        setNotes(prev => ({ ...prev, [i]: noteDoc.data().content || '' }));
+                    }
+                }
+            }
+        };
+        loadUserData();
+    }, [user]);
 
     const getDayDate = (dayIndex: number) => {
         const date = new Date(startDate);
@@ -20,11 +54,38 @@ export default function Day90Progress() {
 
     const handleNoteChange = async (day: number, content: string) => {
         setNotes(prev => ({ ...prev, [day]: content }));
+        if (user) {
+            const noteDate = new Date(startDate);
+            noteDate.setDate(noteDate.getDate() + day - 1);
 
-        await setDoc(doc(db, '90day-progress', `day-${day}`), {
-            content,
-            updatedAt: new Date()
-        });
+            await setDoc(doc(db, 'users', user.uid, '90day-progress', `day-${day}`), {
+                content,
+                date: noteDate,  // 添加日期字段
+                updatedAt: new Date()
+            });
+        }
+    };
+
+    const handleGoalChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const newGoal = e.target.value;
+        setGoal(newGoal);
+        if (user) {
+            await setDoc(doc(db, 'users', user.uid, '90day-progress', 'goal'), {
+                text: newGoal,
+                updatedAt: new Date()
+            });
+        }
+    };
+
+    const handleDateChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const newDate = new Date(e.target.value);
+        setStartDate(newDate);
+        if (user) {
+            await setDoc(doc(db, 'users', user.uid, '90day-progress', 'settings'), {
+                startDate: newDate,
+                updatedAt: new Date()
+            });
+        }
     };
 
     return (
@@ -46,8 +107,10 @@ export default function Day90Progress() {
                             </h1>
                             <input
                                 type="text"
+                                value={goal}
+                                onChange={handleGoalChange}
                                 placeholder="輸入目標..."
-                                className="text-2xl font-bold px-3 py-1 w-80 bg-gradient-to-r from-blue-700 via-blue-600  to-blue-500 text-transparent bg-clip-text"
+                                className="text-2xl font-bold px-3 py-1 w-150 bg-gradient-to-r from-blue-700 via-blue-600 to-blue-500 text-transparent bg-clip-text"
                             />
                         </div>
                         <div className="flex items-center gap-2">
@@ -55,7 +118,7 @@ export default function Day90Progress() {
                             <input
                                 type="date"
                                 value={startDate.toISOString().split('T')[0]}
-                                onChange={(e) => setStartDate(new Date(e.target.value))}
+                                onChange={handleDateChange}
                                 className="text-sm border rounded px-2 py-1"
                             />
                         </div>
@@ -64,48 +127,58 @@ export default function Day90Progress() {
                     {/* 90天格子容器 */}
                     <div className="w-full">
                         <div className="grid grid-cols-7 gap-1">
-                            {Array.from({ length: 90 }).map((_, index) => (
+                            {Array.from({ length: 91 }).map((_, index) => (
                                 <div
                                     key={index}
                                     onClick={() => setEditingDay(index + 1)}
                                     className={`aspect-[1/0.35] rounded shadow-sm border ${editingDay === index + 1
                                         ? 'border-blue-500 dark:border-blue-400'
                                         : 'border-gray-200 dark:border-gray-700'
-                                        } relative p-1 ${new Date(startDate).getTime() + (index * 86400000) < Date.now()
-                                            ? 'bg-blue-100 dark:bg-blue-900/30'
-                                            : 'bg-white dark:bg-gray-800'}`}
+                                        } relative p-1 ${index === 90
+                                            ? 'bg-gradient-to-r from-blue-500 to-blue-700 text-white'
+                                            : new Date(startDate).getTime() + (index * 86400000) < Date.now()
+                                                ? 'bg-blue-100 dark:bg-blue-900/30'
+                                                : 'bg-white dark:bg-gray-800'}`}
                                 >
-                                    <div className="absolute top-1 left-1 z-10">
-                                        <div className="text-xs font-medium text-gray-800 dark:text-gray-200">
-                                            {index + 1}
+                                    {index === 90 ? (
+                                        <div className="w-full h-full flex items-center justify-center text-center p-2">
+                                            <span className="font-bold">恭喜達成!</span>
                                         </div>
-                                        <div className="text-[10px] text-gray-400 dark:text-gray-500 -mb-1">
-                                            {getDayDate(index)}
-                                        </div>
-                                        <input
-                                            type="checkbox"
-                                            className="h-3.8 w-3.8 rounded border-gray-300 text-blue-600 focus:ring-blue-500 -mt-2"
-                                        />
-                                    </div>
-
-                                    {editingDay === index + 1 ? (
-                                        <textarea
-                                            autoFocus
-                                            value={notes[index + 1] || ''}
-                                            onChange={(e) => handleNoteChange(index + 1, e.target.value)}
-                                            onBlur={() => setEditingDay(null)}
-                                            className="w-full h-full p-1 text-sm bg-transparent resize-none outline-none pl-8 pt-1"
-                                            style={{ lineHeight: '1.2', whiteSpace: 'pre-wrap' }}
-                                        />
                                     ) : (
-                                        <div className="w-full h-full p-1 overflow-hidden prose dark:prose-invert max-w-none pl-8 pt-1 text-sm">
-                                            <ReactMarkdown components={{
-                                                p: ({ node, ...props }) => <div {...props} />,
-                                                br: ({ node, ...props }) => <br {...props} />
-                                            }}>
-                                                {notes[index + 1]?.replace(/\n/g, '  \n') || ''}
-                                            </ReactMarkdown>
-                                        </div>
+                                        <>
+                                            <div className="absolute top-1 left-1 z-10">
+                                                <div className="text-xs font-medium text-gray-800 dark:text-gray-200">
+                                                    {index + 1}
+                                                </div>
+                                                <div className="text-[10px] text-gray-400 dark:text-gray-500 -mb-1">
+                                                    {getDayDate(index)}
+                                                </div>
+                                                <input
+                                                    type="checkbox"
+                                                    className="h-3.8 w-3.8 rounded border-gray-300 text-blue-600 focus:ring-blue-500 -mt-2"
+                                                />
+                                            </div>
+
+                                            {editingDay === index + 1 ? (
+                                                <textarea
+                                                    autoFocus
+                                                    value={notes[index + 1] || ''}
+                                                    onChange={(e) => handleNoteChange(index + 1, e.target.value)}
+                                                    onBlur={() => setEditingDay(null)}
+                                                    className="w-full h-full p-1 text-sm bg-transparent resize-none outline-none pl-8 pt-1"
+                                                    style={{ lineHeight: '1.2', whiteSpace: 'pre-wrap' }}
+                                                />
+                                            ) : (
+                                                <div className="w-full h-full p-1 overflow-hidden prose dark:prose-invert max-w-none pl-8 pt-1 text-sm">
+                                                    <ReactMarkdown components={{
+                                                        p: ({ node, ...props }) => <div {...props} />,
+                                                        br: ({ node, ...props }) => <br {...props} />
+                                                    }}>
+                                                        {notes[index + 1]?.replace(/\n/g, '  \n') || ''}
+                                                    </ReactMarkdown>
+                                                </div>
+                                            )}
+                                        </>
                                     )}
                                 </div>
                             ))}
