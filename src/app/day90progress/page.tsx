@@ -208,8 +208,8 @@ export default function Day90Progress() {
                                             ) : (
                                                 <div className="w-full h-full p-1 overflow-hidden prose dark:prose-invert max-w-none pl-8 pt-1 text-sm">
                                                     <ReactMarkdown components={{
-                                                        p: ({ node, ...props }) => <div {...props} />,
-                                                        br: ({ node, ...props }) => <br {...props} />
+                                                        p: ({ ...props }) => <div {...props} />,
+                                                        br: ({ ...props }) => <br {...props} />
                                                     }}>
                                                         {notes[index + 1]?.replace(/\n/g, '  \n') || ''}
                                                     </ReactMarkdown>
