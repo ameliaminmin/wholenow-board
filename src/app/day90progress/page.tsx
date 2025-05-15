@@ -117,9 +117,9 @@ export default function Day90Progress() {
 
                 {/* 頁面內容 */}
                 <main className="flex-1 overflow-y-auto p-4">
-                    <div className="flex justify-between items-start mb-6">
-                        <div className="flex items-center gap-2">
-                            <h1 className="text-m font-bold text-gray-800 dark:text-gray-200">
+                    <div className="flex justify-between items-center mb-6">
+                        <div className="flex items-center gap-2 flex-1 mr-4 whitespace-nowrap">
+                            <h1 className="text-m font-bold text-gray-800 dark:text-gray-200 inline">
                                 90天目標：
                             </h1>
                             <input
@@ -127,23 +127,23 @@ export default function Day90Progress() {
                                 value={goal}
                                 onChange={handleGoalChange}
                                 placeholder="輸入目標..."
-                                className="text-m font-bold px-3 py-1 w-90 text-gray-800 dark:text-gray-200  "
+                                className="text-m font-bold px-3 py-1 w-full max-w-[600px] text-gray-800 dark:text-gray-200 inline"
                             />
                         </div>
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-2 flex-1 whitespace-nowrap justify-end">
                             <input
                                 type="text"
                                 value={remark}
                                 onChange={handleRemarkChange}
                                 placeholder="備註..."
-                                className="text-sm border rounded px-2 py-1 text-gray-400 dark:text-gray-500"
+                                className="text-sm border rounded px-2 py-1 w-full max-w-[300px] text-gray-400 dark:text-gray-500 inline"
                             />
-                            <span className="text-sm text-gray-600 dark:text-gray-400">開始日期:</span>
+                            <span className="text-sm text-gray-600 dark:text-gray-400 whitespace-nowrap">開始日期:</span>
                             <input
                                 type="date"
                                 value={startDate.toISOString().split('T')[0]}
                                 onChange={handleDateChange}
-                                className="text-sm border rounded px-2 py-1"
+                                className="text-sm border rounded px-2 py-1 inline"
                             />
                         </div>
                     </div>
@@ -176,7 +176,7 @@ export default function Day90Progress() {
                                                     style={{ lineHeight: '1.2', whiteSpace: 'pre-wrap' }}
                                                 />
                                             ) : (
-                                                <span 
+                                                <span
                                                     className="font-bold text-sm cursor-pointer"
                                                     onClick={() => setEditingDay(91)}  // 明确使用91
                                                 >
