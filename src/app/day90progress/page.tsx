@@ -68,10 +68,12 @@ export default function Day90Progress() {
                                 <div
                                     key={index}
                                     onClick={() => setEditingDay(index + 1)}
-                                    className={`aspect-[1/0.5] bg-white dark:bg-gray-800 rounded shadow-sm border ${editingDay === index + 1
+                                    className={`aspect-[1/0.3] rounded shadow-sm border ${editingDay === index + 1
                                         ? 'border-blue-500 dark:border-blue-400'
                                         : 'border-gray-200 dark:border-gray-700'
-                                        } relative p-1`}
+                                        } relative p-1 ${new Date(startDate).getTime() + (index * 86400000) < Date.now() 
+                                        ? 'bg-blue-50 dark:bg-blue-900/30' 
+                                        : 'bg-white dark:bg-gray-800'}`}
                                 >
                                     <div className="absolute top-1 left-1 z-10">
                                         <div className="text-xs font-medium text-gray-800 dark:text-gray-200">
