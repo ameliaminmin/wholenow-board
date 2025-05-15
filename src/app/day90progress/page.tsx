@@ -47,7 +47,7 @@ export default function Day90Progress() {
                             <input
                                 type="text"
                                 placeholder="輸入目標..."
-                                className="text-2xl font-bold px-3 py-1 w-80 bg-gradient-to-r from-pink-300 via-yellow-400 via-green-300 to-blue-400 text-transparent bg-clip-text"
+                                className="text-2xl font-bold px-3 py-1 w-80 bg-gradient-to-r from-blue-700 via-blue-600  to-blue-500 text-transparent bg-clip-text"
                             />
                         </div>
                         <div className="flex items-center gap-2">
@@ -68,20 +68,24 @@ export default function Day90Progress() {
                                 <div
                                     key={index}
                                     onClick={() => setEditingDay(index + 1)}
-                                    className={`aspect-[1/0.3] rounded shadow-sm border ${editingDay === index + 1
+                                    className={`aspect-[1/0.35] rounded shadow-sm border ${editingDay === index + 1
                                         ? 'border-blue-500 dark:border-blue-400'
                                         : 'border-gray-200 dark:border-gray-700'
-                                        } relative p-1 ${new Date(startDate).getTime() + (index * 86400000) < Date.now() 
-                                        ? 'bg-blue-50 dark:bg-blue-900/30' 
-                                        : 'bg-white dark:bg-gray-800'}`}
+                                        } relative p-1 ${new Date(startDate).getTime() + (index * 86400000) < Date.now()
+                                            ? 'bg-blue-100 dark:bg-blue-900/30'
+                                            : 'bg-white dark:bg-gray-800'}`}
                                 >
                                     <div className="absolute top-1 left-1 z-10">
                                         <div className="text-xs font-medium text-gray-800 dark:text-gray-200">
                                             {index + 1}
                                         </div>
-                                        <div className="text-[10px] text-gray-400 dark:text-gray-500">
+                                        <div className="text-[10px] text-gray-400 dark:text-gray-500 -mb-1">
                                             {getDayDate(index)}
                                         </div>
+                                        <input
+                                            type="checkbox"
+                                            className="h-3.8 w-3.8 rounded border-gray-300 text-blue-600 focus:ring-blue-500 -mt-2"
+                                        />
                                     </div>
 
                                     {editingDay === index + 1 ? (
@@ -91,7 +95,6 @@ export default function Day90Progress() {
                                             onChange={(e) => handleNoteChange(index + 1, e.target.value)}
                                             onBlur={() => setEditingDay(null)}
                                             className="w-full h-full p-1 text-sm bg-transparent resize-none outline-none pl-8 pt-1"
-                                            placeholder="輸入內容..."
                                             style={{ lineHeight: '1.2', whiteSpace: 'pre-wrap' }}
                                         />
                                     ) : (
