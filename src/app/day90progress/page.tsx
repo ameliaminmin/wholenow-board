@@ -16,7 +16,25 @@ export default function Day90Progress() {
 
                 {/* 頁面內容 */}
                 <main className="flex-1 overflow-y-auto p-4">
-                    {/* 這裡可以添加頁面的具體內容 */}
+                    <h1 className="text-2xl font-semibold text-gray-800 dark:text-gray-200 mb-6">
+                        90天目標：
+                    </h1>
+
+                    {/* 90天格子容器 */}
+                    <div className="w-full">
+                        <div className="grid grid-cols-7 gap-1">
+                            {Array.from({ length: 90 }).map((_, index) => (
+                                <div
+                                    key={index}
+                                    className="aspect-[1/0.3] bg-white dark:bg-gray-800 rounded shadow-sm border border-gray-200 dark:border-gray-700 flex items-center justify-center"
+                                >
+                                    <span className="text-xs text-gray-500 dark:text-gray-400">
+                                        {index + 1}
+                                    </span>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
                 </main>
             </div>
         </div>
