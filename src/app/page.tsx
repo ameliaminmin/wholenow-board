@@ -212,6 +212,11 @@ export default function Home() {
                 description: "建立屬於你自己的主題知識庫：成長背景、價值觀、人生信念、情緒模式、關係模式、夢想、與生命覺察......與AI一起探索，讓你成為自己人生的研究者，為未來做出最好的選擇。"
               },
               {
+                icon: "🫀",
+                title: "全方位健康管理系統",
+                description: "從飲食、運動、睡眠、情緒等整體角度記錄身心健康數值，由AI 幫你分析追蹤現在的運動計畫和成效、推薦適合的營養品等等"
+              },
+              {
                 icon: "🌈",
                 title: "夢想板",
                 description: "以視覺化的夢想板規劃中長期願景，並對齊短期的任務，將抽象的夢想轉化為可實踐的路徑。"
@@ -268,13 +273,13 @@ export default function Home() {
             不是要掌控人生，而是與它同頻共舞。」
           </motion.p>
           <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
-            WholeNow Board 是一面鏡子，也是畫布。
+            WholeNow Board 是一面鏡子，也是一張藍圖。
             <br />
             是人生的儀式感，也是日常的管理術。
             <br />
-            陪你整合、選擇、記錄，然後，在對的時間點，
+            陪你整合、選擇、記錄，讓每一瞬間都是對的時間點，
             <br />
-            一步步實現你想活的那個版本的自己。
+            並一步步實現你想活的那個版本的自己。
           </p>
         </div>
       </section>
